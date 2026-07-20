@@ -187,6 +187,10 @@ awful.keyboard.append_global_keybindings({
 		local c = client.focus
 		if c and c.valid then
 			c.floating = not c.floating
+
+			if c.floating then
+				awful.placement.centered(c, { honor_workarea = true })
+			end
 		end
 	end, { group = "client" }),
 
@@ -262,7 +266,7 @@ awful.keyboard.append_global_keybindings({
 	awful.key({ modkey, "Shift" }, "Left", function()
 		local c = client.focus
 		if c and c.valid and c.floating then
-			c:relative_move(40, 0, -40, 0)
+			c:relative_move(20, 0, -40, 0)
 		else
 			awful.tag.incmwfact(-0.05)
 		end
@@ -271,7 +275,7 @@ awful.keyboard.append_global_keybindings({
 	awful.key({ modkey, "Shift" }, "Right", function()
 		local c = client.focus
 		if c and c.valid and c.floating then
-			c:relative_move(0, 0, 40, 0)
+			c:relative_move(-20, 0, 40, 0)
 		else
 			awful.tag.incmwfact(0.05)
 		end
@@ -280,7 +284,7 @@ awful.keyboard.append_global_keybindings({
 	awful.key({ modkey, "Shift" }, "Up", function()
 		local c = client.focus
 		if c and c.valid and c.floating then
-			c:relative_move(0, 40, 0, -40)
+			c:relative_move(0, 20, 0, -40)
 		else
 			awful.tag.incnmaster(1, nil, true)
 		end
@@ -289,7 +293,7 @@ awful.keyboard.append_global_keybindings({
 	awful.key({ modkey, "Shift" }, "Down", function()
 		local c = client.focus
 		if c and c.valid and c.floating then
-			c:relative_move(0, 0, 0, 40)
+			c:relative_move(0, -20, 0, 40)
 		else
 			awful.tag.incnmaster(-1, nil, true)
 		end
@@ -403,7 +407,8 @@ client.connect_signal("request::default_mousebindings", function()
 			awful.mouse.client.move(c)
 		end),
 		awful.button({ modkey }, 3, function(c)
-			c:activate({ context = "mouse_click", action = "mouse_resize" })
+			c:activate({ context = "mouse_click" })
+			awful.mouse.client.resize(c)
 		end),
 	})
 end)
