@@ -458,7 +458,7 @@ client.connect_signal("request::default_keybindings", function()
 		end),
 
 		awful.key({ modkey }, "v", function()
-			awful.spawn.with_shell("GTK_THEME=Flat-Remix-GTK-Blue-Dark pavucontrol")
+			awful.spawn("env GTK_THEME=Flat-Remix-GTK-Blue-Dark pavucontrol")
 		end),
 
 	})
