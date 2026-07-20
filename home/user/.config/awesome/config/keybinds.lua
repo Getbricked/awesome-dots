@@ -25,6 +25,10 @@ awful.keyboard.append_global_keybindings({
 		awful.spawn("rofi -show drun")
 	end, { group = "launcher" }),
 
+	awful.key({ modkey, "Mod1" }, "v", function()
+		awful.spawn.with_shell("CM_LAUNCHER=rofi clipmenu")
+	end, { group = "launcher" }),
+
 	awful.key({ modkey }, "e", function()
 		awful.spawn("thunar")
 	end, { group = "launcher" }),
