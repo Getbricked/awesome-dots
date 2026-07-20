@@ -19,93 +19,93 @@ awful.keyboard.append_global_keybindings({
 
 	awful.key({ modkey }, "Return", function()
 		awful.spawn(terminal)
-	end, { group = "launcher" }),
+	end),
 
 	awful.key({ modkey }, "d", function()
 		awful.spawn("rofi -show drun")
-	end, { group = "launcher" }),
+	end),
 
 	awful.key({ modkey, "Mod1" }, "v", function()
 		awful.spawn.with_shell("CM_LAUNCHER=rofi clipmenu")
-	end, { group = "launcher" }),
+	end),
 
 	awful.key({ modkey }, "e", function()
 		awful.spawn("thunar")
-	end, { group = "launcher" }),
+	end),
 
 	awful.key({ modkey }, "b", function()
 		awful.spawn("zen-browser", {
 			tag = awful.screen.focused().selected_tag,
 		})
-	end, { group = "launcher" }),
+	end),
 
 	awful.key({ modkey, "Control" }, "q", awesome.quit, { group = "awesome" }),
 
 	awful.key({}, "XF86MonBrightnessUp", function()
 		awful.spawn("brightnessctl s +10%")
-	end, { group = "system" }),
+	end),
 
 	awful.key({}, "XF86MonBrightnessDown", function()
 		awful.spawn("brightnessctl s 10%-")
-	end, { group = "system" }),
+	end),
 
 	awful.key({}, "XF86AudioRaiseVolume", function()
 		awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false)
 		awesome.emit_signal("widget::volume")
-	end, { group = "media" }),
+	end),
 
 	awful.key({}, "XF86AudioLowerVolume", function()
 		awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false)
 		awesome.emit_signal("widget::volume")
-	end, { group = "media" }),
+	end),
 
 	awful.key({}, "XF86AudioMute", function()
 		awful.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle", false)
 		awesome.emit_signal("widget::volume")
-	end, { group = "media" }),
+	end),
 
 	awful.key({}, "XF86AudioMicMute", function()
 		awful.spawn("pactl set-source-mute @DEFAULT_SOURCE@ toggle", false)
 		awesome.emit_signal("widget::volume")
-	end, { group = "media" }),
+	end),
 
 	awful.key({}, "XF86AudioMicMute", function()
 		awful.spawn("pactl set-source-mute @DEFAULT_SOURCE@ toggle", false)
-	end, { group = "media" }),
+	end),
 
 	awful.key({}, "XF86AudioPlay", function()
 		awful.spawn("playerctl play-pause", false)
-	end, { group = "media" }),
+	end),
 
 	awful.key({}, "XF86AudioPrev", function()
 		awful.spawn("playerctl previous", false)
-	end, { group = "media" }),
+	end),
 
 	awful.key({}, "XF86AudioNext", function()
 		awful.spawn("playerctl next", false)
-	end, { group = "media" }),
+	end),
 
 	awful.key({}, "XF86AudioStop", function()
 		awful.spawn("playerctl stop", false)
-	end, { group = "media" }),
+	end),
 
 	awful.key({}, "XF86TouchpadToggle", function()
 		awful.spawn.with_shell(
 			"xinput set-prop $(xinput list --id-only 'pointer:SYNA329D:00 06CB:CE14 Touchpad') 325 0"
 		)
-	end, { group = "system" }),
+	end),
 
 	awful.key({}, "XF86WLAN", function()
 		awful.spawn("nmcli radio wifi toggle", false)
-	end, { group = "system" }),
+	end),
 
 	awful.key({}, "XF86Bluetooth", function()
 		awful.spawn.with_shell("bluetoothctl power off && sleep 1 && bluetoothctl power on")
-	end, { group = "system" }),
+	end),
 
 	awful.key({}, "XF86Sleep", function()
 		awful.spawn("systemctl suspend", false)
-	end, { group = "system" }),
+	end),
 
 	awful.key({ modkey, "Shift" }, "s", function()
 		local ss = awful.screenshot({
@@ -120,11 +120,11 @@ awful.keyboard.append_global_keybindings({
 		end)
 
 		ss:refresh()
-	end, { group = "screenshot" }),
+	end),
 })
 
 awful.keyboard.append_global_keybindings({
-	awful.key({ modkey }, "Escape", awful.tag.history.restore, { group = "tag" }),
+	awful.key({ modkey }, "Escape", awful.tag.history.restore),
 	awful.key({ "Mod1" }, "Tab", function()
 		local s = awful.screen.focused()
 		local tags = s.tags
@@ -146,7 +146,7 @@ awful.keyboard.append_global_keybindings({
 			end
 		end
 		active[1]:view_only()
-	end, { group = "tag" }),
+	end),
 })
 
 awful.keyboard.append_global_keybindings({
@@ -155,35 +155,35 @@ awful.keyboard.append_global_keybindings({
 		if client.focus then
 			client.focus:raise()
 		end
-	end, { group = "client" }),
+	end),
 
 	awful.key({ modkey }, "Left", function()
 		awful.client.focus.global_bydirection("left")
 		if client.focus then
 			client.focus:raise()
 		end
-	end, { group = "client" }),
+	end),
 
 	awful.key({ modkey }, "Right", function()
 		awful.client.focus.global_bydirection("right")
 		if client.focus then
 			client.focus:raise()
 		end
-	end, { group = "client" }),
+	end),
 
 	awful.key({ modkey }, "Up", function()
 		awful.client.focus.global_bydirection("up")
 		if client.focus then
 			client.focus:raise()
 		end
-	end, { group = "client" }),
+	end),
 
 	awful.key({ modkey }, "Down", function()
 		awful.client.focus.global_bydirection("down")
 		if client.focus then
 			client.focus:raise()
 		end
-	end, { group = "client" }),
+	end),
 })
 
 awful.keyboard.append_global_keybindings({
@@ -196,11 +196,11 @@ awful.keyboard.append_global_keybindings({
 				awful.placement.centered(c, { honor_workarea = true })
 			end
 		end
-	end, { group = "client" }),
+	end),
 
 	awful.key({ modkey, "Shift" }, "space", function()
 		awful.layout.inc(1)
-	end, { group = "layout" }),
+	end),
 })
 
 local function swap_by_direction(dir)
@@ -274,7 +274,7 @@ awful.keyboard.append_global_keybindings({
 		else
 			awful.tag.incmwfact(-0.05)
 		end
-	end, { group = "client" }),
+	end),
 
 	awful.key({ modkey, "Shift" }, "Right", function()
 		local c = client.focus
@@ -283,7 +283,7 @@ awful.keyboard.append_global_keybindings({
 		else
 			awful.tag.incmwfact(0.05)
 		end
-	end, { group = "client" }),
+	end),
 
 	awful.key({ modkey, "Shift" }, "Up", function()
 		local c = client.focus
@@ -292,7 +292,7 @@ awful.keyboard.append_global_keybindings({
 		else
 			awful.tag.incnmaster(1, nil, true)
 		end
-	end, { group = "client" }),
+	end),
 
 	awful.key({ modkey, "Shift" }, "Down", function()
 		local c = client.focus
@@ -301,23 +301,23 @@ awful.keyboard.append_global_keybindings({
 		else
 			awful.tag.incnmaster(-1, nil, true)
 		end
-	end, { group = "client" }),
+	end),
 
 	awful.key({ modkey, "Mod1" }, "Left", function()
 		swap_by_direction("left")
-	end, { group = "client" }),
+	end),
 
 	awful.key({ modkey, "Mod1" }, "Right", function()
 		swap_by_direction("right")
-	end, { group = "client" }),
+	end),
 
 	awful.key({ modkey, "Control" }, "Left", function()
 		move_window_directional("left")
-	end, { group = "client" }),
+	end),
 
 	awful.key({ modkey, "Control" }, "Right", function()
 		move_window_directional("right")
-	end, { group = "client" }),
+	end),
 })
 
 awful.keyboard.append_global_keybindings({
@@ -439,22 +439,27 @@ client.connect_signal("request::default_keybindings", function()
 		awful.key({ modkey }, "f", function(c)
 			c.maximized = not c.maximized
 			c:raise()
-		end, { group = "client" }),
+		end),
 
 		awful.key({ modkey, "Shift" }, "f", function(c)
 			c.fullscreen = not c.fullscreen
 			c:raise()
-		end, { group = "client" }),
+		end),
 
 		awful.key({ modkey }, "q", function(c)
 			c:kill()
-		end, { group = "client" }),
+		end),
 
 		awful.key({ modkey, "Shift" }, "q", function()
 			local c = client.focus
 			if c and c.valid and c.pid then
 				awful.spawn("kill -9 " .. c.pid)
 			end
-		end, { group = "client" }),
+		end),
+
+		awful.key({ modkey }, "v", function()
+			awful.spawn.with_shell("GTK_THEME=Flat-Remix-GTK-Blue-Dark pavucontrol")
+		end),
+
 	})
 end)
