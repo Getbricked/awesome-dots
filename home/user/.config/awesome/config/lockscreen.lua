@@ -311,6 +311,7 @@ function lockscreen.show()
 		end,
 	})
 	lockscreen.keygrabber:start()
+	awful.spawn.with_shell("sleep 10 && xset dpms force off")
 end
 
 function lockscreen.hide()

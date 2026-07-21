@@ -14,6 +14,7 @@ naughty.connect_signal("request::display_error", function(message, startup)
 end)
 
 require("config.startup")
+require("config.idle_timer")
 require("config.wallpaper")
 require("config.keybinds")
 require("config.touchpad")

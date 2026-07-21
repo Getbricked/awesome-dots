@@ -336,13 +336,14 @@ keyboard.append_global_keybindings({
 		keygroup = "numrow",
 		group = "tag",
 		on_press = function(index)
-			local screen = screen.focused()
-			local tag = screen.tags[index]
+			local s = screen.focused()
+			local tag = s.tags[index]
 			if tag then
 				tag:view_only()
-				local c = awful.client.focus.history.get(screen, 0)
-				if c and c.valid then
-					c:emit_signal("request::activate", "tag.switch", { raise = true })
+				local c = tag:clients()[1]
+				if c then
+					client.focus = c
+					c:raise()
 				end
 			end
 		end,
