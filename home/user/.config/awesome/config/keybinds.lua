@@ -5,6 +5,7 @@ local keyboard = require("awful.keyboard")
 local tag = require("awful.tag")
 local screen = require("awful.screen")
 local spawn = require("awful.spawn")
+local gears = require("gears")
 
 local super = "Mod4"
 local alt = "Mod1"
@@ -116,20 +117,25 @@ keyboard.append_global_keybindings({
 	end),
 
 	key({ super, shift }, "s", function()
-		awful.spawn.with_shell("systemctl --user stop clipmenud.service")
+		spawn.with_shell("systemctl --user stop clipmenud.service")
 		local ss = awful.screenshot({
 			interactive = true,
 			directory = "/tmp",
 		})
 
 		ss:connect_signal("file::saved", function(_, file_path)
-			awful.spawn.with_shell(
+			spawn.with_shell(
 				"xclip -selection clipboard -t image/png -i '" .. file_path .. "' && rm '" .. file_path .. "'"
 			)
+
+			gears.timer.start_new(1, function()
+				spawn.with_shell("systemctl --user start clipmenud.service")
+				return false
+			end)
 		end)
 
-		ss:connect_signal("finish", function()
-			awful.spawn.with_shell("sleep 1 && systemctl --user start clipmenud.service")
+		ss:connect_signal("snipping::cancelled", function()
+			spawn.with_shell("systemctl --user start clipmenud.service")
 		end)
 
 		ss:refresh()
