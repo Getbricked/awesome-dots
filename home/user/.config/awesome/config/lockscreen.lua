@@ -240,49 +240,97 @@ function lockscreen.show()
 	end
 
 	local function update_status(message, is_error)
+		if not lockscreen.screens then
+			return
+		end
 		for _, screen_lock in ipairs(lockscreen.screens) do
-			if is_error then
-				screen_lock.status_widget.markup = '<span foreground="' .. mocha.red.hex .. '">' .. message .. "</span>"
-			else
-				screen_lock.status_widget.markup = '<span foreground="'
-					.. mocha.green.hex
-					.. '">'
-					.. message
-					.. "</span>"
-			end
+			pcall(function()
+				if is_error then
+					screen_lock.status_widget.markup = '<span foreground="'
+						.. mocha.red.hex
+						.. '">'
+						.. message
+						.. "</span>"
+				else
+					screen_lock.status_widget.markup = '<span foreground="'
+						.. mocha.green.hex
+						.. '">'
+						.. message
+						.. "</span>"
+				end
+			end)
 		end
 	end
 
 	local function update_indicator()
+		if not lockscreen.screens then
+			return
+		end
 		for _, screen_lock in ipairs(lockscreen.screens) do
-			if screen_lock.indicator_widget then
-				local random_color = mocha_colors[math.random(#mocha_colors)]
-				while random_color == screen_lock.indicator_widget.fg do
-					random_color = mocha_colors[math.random(#mocha_colors)]
+			pcall(function()
+				if screen_lock.indicator_widget then
+					local random_color = mocha_colors[math.random(#mocha_colors)]
+					while random_color == screen_lock.indicator_widget.fg do
+						random_color = mocha_colors[math.random(#mocha_colors)]
+					end
+					screen_lock.indicator_widget.fg = random_color
 				end
-				screen_lock.indicator_widget.fg = random_color
-			end
+			end)
 		end
 	end
 
 	local function try_unlock()
 		update_status("Unlocking btw...", false)
-		if authenticate(lockscreen.password) then
-			lockscreen.hide()
-		else
-			lockscreen.password = ""
-			update_indicator()
-			update_status("Failure! You are not btw.", true)
+		local ok = pcall(function()
+			if authenticate(lockscreen.password) then
+				lockscreen.hide()
+			else
+				lockscreen.password = ""
+				update_indicator()
+				update_status("Failure! You are not btw.", true)
+			end
+		end)
+		if not ok then
+			naughty.notification({
+				title = "Unlock Error",
+				message = "Something crashed during unlock. Force hiding...",
+				urgency = "critical",
+			})
+			lockscreen.visible = false
+			if lockscreen.screens then
+				for _, sl in ipairs(lockscreen.screens) do
+					pcall(function()
+						if sl.ui then
+							sl.ui.visible = false
+							sl.ui:destroy()
+							sl.ui = nil
+						end
+					end)
+				end
+				lockscreen.screens = nil
+			end
 		end
 	end
 
 	update_indicator()
+
+	lockscreen.monitor_off_timer = gears.timer({
+		timeout = 10,
+		autostart = false,
+		single_shot = true,
+		callback = function()
+			awful.spawn.with_shell("xset dpms force off")
+		end,
+	})
 
 	lockscreen.keygrabber = awful.keygrabber({
 		autostart = false,
 		stop_key = nil,
 		stop_event = nil,
 		keypressed_callback = function(self, modifiers, key, event)
+			if lockscreen.monitor_off_timer then
+				lockscreen.monitor_off_timer:stop()
+			end
 			if key == "BackSpace" then
 				if #lockscreen.password > 0 then
 					lockscreen.password = lockscreen.password:sub(1, -2)
@@ -310,8 +358,9 @@ function lockscreen.show()
 			awful.spawn({ "physlock", "-l" })
 		end,
 	})
+
 	lockscreen.keygrabber:start()
-	awful.spawn.with_shell("sleep 10 && xset dpms force off")
+	lockscreen.monitor_off_timer:start()
 end
 
 function lockscreen.hide()
@@ -321,19 +370,29 @@ function lockscreen.hide()
 
 	lockscreen.visible = false
 	if lockscreen.keygrabber then
-		lockscreen.keygrabber:stop()
+		pcall(function()
+			lockscreen.keygrabber:stop()
+		end)
 		lockscreen.keygrabber = nil
 	end
 
 	if lockscreen.screens then
 		for _, screen_lock in ipairs(lockscreen.screens) do
-			if screen_lock.ui then
-				screen_lock.ui.visible = false
-				screen_lock.ui = nil
-			end
+			pcall(function()
+				if screen_lock.ui then
+					screen_lock.ui.visible = false
+					screen_lock.ui:destroy()
+					screen_lock.ui = nil
+				end
+			end)
 		end
 		lockscreen.screens = {}
 		lockscreen.screens = nil
+	end
+
+	if lockscreen.monitor_off_timer then
+		lockscreen.monitor_off_timer:stop()
+		lockscreen.monitor_off_timer = nil
 	end
 
 	lockscreen.password = ""

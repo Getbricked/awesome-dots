@@ -14,7 +14,7 @@ awful.spawn("xsetroot -cursor_name left_ptr", false)
 beautiful.border_width = 2
 beautiful.border_color_normal = "#000000"
 beautiful.border_color_active = "#87CEEB"
-beautiful.useless_gap = 5
+beautiful.useless_gap = 8
 beautiful.gap_single_client = true
 
 local function keep_border_on_maximize(c)

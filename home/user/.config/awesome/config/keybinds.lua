@@ -100,9 +100,7 @@ keyboard.append_global_keybindings({
 	end),
 
 	key({}, "XF86TouchpadToggle", function()
-		spawn.with_shell(
-			"xinput set-prop $(xinput list --id-only 'pointer:SYNA329D:00 06CB:CE14 Touchpad') 325 0"
-		)
+		spawn.with_shell("xinput set-prop $(xinput list --id-only 'pointer:SYNA329D:00 06CB:CE14 Touchpad') 325 0")
 	end),
 
 	key({}, "XF86WLAN", function()
@@ -471,6 +469,5 @@ client.connect_signal("request::default_keybindings", function()
 		key({ super }, "v", function()
 			spawn("env GTK_THEME=Flat-Remix-GTK-Blue-Dark pavucontrol")
 		end),
-
 	})
 end)
