@@ -11,11 +11,11 @@ ruled.notification.connect_signal("request::rules", function()
 			position = "top_middle",
 			implicit_timeout = 5,
 			bg = "#000000",
-			border_width = 2,
-			border_color = "#87CEEB",
-			shape = function(cr, width, height)
-				gears.shape.rounded_rect(cr, width, height, 10)
-			end,
+			--border_width = 2,
+			--border_color = "#87CEEB",
+			--shape = function(cr, width, height)
+			--gears.shape.rounded_rect(cr, width, height, 10)
+			--end,
 		},
 	})
 end)
