@@ -1,6 +1,7 @@
 # awesome-dots
 
 A dynamic tiling + floating awesomewm dots
+
 Lockscreen and screenshot by [Nanoka](https://github.com/nhktmdzhg/)
 
 ![awesome](https://getbricked.github.io/awesome.png)
