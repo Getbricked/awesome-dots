@@ -8,6 +8,7 @@ local rnotification = require("ruled.notification")
 local dpi = xresources.apply_dpi
 
 local gfs = require("gears.filesystem")
+local gears = require("gears")
 local themes_path = gfs.get_themes_dir()
 
 local theme = {}
@@ -49,10 +50,12 @@ theme.taglist_squares_sel = theme_assets.taglist_squares_sel(taglist_square_size
 theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(taglist_square_size, theme.fg_normal)
 
 -- Variables set for theming notifications:
--- notification_font
--- notification_[bg|fg]
--- notification_[width|height|margin]
--- notification_[border_color|border_width|shape|opacity]
+theme.notification_font = "monospace bold 11"
+theme.notification_bg = "#00000066"
+theme.notification_fg = "#87CEEB"
+theme.notification_border_width = 2
+theme.notification_border_color = "#87CEEB"
+theme.notification_shape = gears.shape.rounded_rect
 
 -- Variables set for theming the menu:
 -- menu_[bg|fg]_[normal|focus]

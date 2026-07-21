@@ -19,11 +19,11 @@ require("config.wallpaper")
 require("config.keybinds")
 require("config.touchpad")
 require("config.window_rules")
-require("config.notifications")
 require("wibar.wibar")
 beautiful.init("~/.config/awesome/themes/theme.lua")
 require("config.system_settings")
 require("config.layout")
+require("config.notifications")
 
 terminal = "kitty"
 editor = os.getenv("EDITOR") or "nano"
