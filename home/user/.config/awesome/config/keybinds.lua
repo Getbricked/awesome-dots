@@ -116,15 +116,20 @@ keyboard.append_global_keybindings({
 	end),
 
 	key({ super, shift }, "s", function()
+		awful.spawn.with_shell("systemctl --user stop clipmenud.service")
 		local ss = awful.screenshot({
 			interactive = true,
 			directory = "/tmp",
 		})
 
 		ss:connect_signal("file::saved", function(_, file_path)
-			spawn.with_shell(
+			awful.spawn.with_shell(
 				"xclip -selection clipboard -t image/png -i '" .. file_path .. "' && rm '" .. file_path .. "'"
 			)
+		end)
+
+		ss:connect_signal("finish", function()
+			awful.spawn.with_shell("sleep 1 && systemctl --user start clipmenud.service")
 		end)
 
 		ss:refresh()
