@@ -111,6 +111,10 @@ local function apply_opacity(c, id)
 	if not id then
 		return false
 	end
+	if c.fullscreen then
+		c.opacity = 1
+		return true
+	end
 	for pattern, rule in pairs(class_rule) do
 		if id:match(pattern) then
 			local active, inactive = rule[1], rule[2]
@@ -147,6 +151,10 @@ client.connect_signal("focus", function(c)
 	if not c.valid then
 		return
 	end
+	if c.fullscreen then
+		c.opacity = 1
+		return
+	end
 	local id = c.class or c.instance
 	if not id then
 		return
@@ -165,6 +173,10 @@ client.connect_signal("unfocus", function(c)
 	if not c.valid then
 		return
 	end
+	if c.fullscreen then
+		c.opacity = 1
+		return
+	end
 	local id = c.class or c.instance
 	if not id then
 		return
@@ -176,6 +188,19 @@ client.connect_signal("unfocus", function(c)
 			end
 			return
 		end
+	end
+end)
+
+client.connect_signal("property::fullscreen", function(c)
+	if not c.valid then
+		return
+	end
+
+	if c.fullscreen then
+		c.opacity = 1
+	else
+		-- When exiting fullscreen, re-evaluate normal opacity rules
+		apply_opacity(c, c.class or c.instance)
 	end
 end)
 
