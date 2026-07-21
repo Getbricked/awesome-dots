@@ -1,6 +1,5 @@
 local wibox = require("wibox")
 local awful = require("awful")
-local gears = require("gears")
 
 local icons = {
     performance = "",
@@ -25,12 +24,18 @@ end
 
 update_ppd()
 
-gears.timer {
-    timeout = 1.5,
-    autostart = true,
-    single_shot = false,
-    callback = update_ppd,
-}
+-- Listen for power profile changes via DBus instead of polling
+awful.spawn.with_line_callback({
+    "dbus-monitor",
+    "--session",
+    "sender=net.hadess.PowerProfiles,type=signal,interface=org.freedesktop.DBus.Properties,member=PropertiesChanged",
+}, {
+    stdout = function(line)
+        if line:match("ActiveProfile") then
+            update_ppd()
+        end
+    end,
+})
 
 ppd_widget:connect_signal("button::press", function(_, _, _, button)
     if button ~= 1 then return end
@@ -41,8 +46,7 @@ ppd_widget:connect_signal("button::press", function(_, _, _, button)
             if p == current then idx = i; break end
         end
         local next_idx = idx and (idx % #profiles) + 1 or 2
-        awful.spawn("powerprofilesctl set " .. profiles[next_idx], false)
-        update_ppd()
+        awful.spawn("powerprofilesctl set " .. profiles[next_idx], update_ppd)
     end)
 end)
 

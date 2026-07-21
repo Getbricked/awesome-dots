@@ -3,7 +3,7 @@ local awful = require("awful")
 local lockscreen = require("config.lockscreen")
 
 gears.timer({
-	timeout = 5,
+	timeout = 10,
 	autostart = true,
 	callback = function()
 		awful.spawn.easy_async("xprintidle", function(stdout)

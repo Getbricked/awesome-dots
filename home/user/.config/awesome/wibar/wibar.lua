@@ -43,22 +43,21 @@ end
 
 volume_widget:connect_signal("button::press", function(_, _, _, button)
 	if button == 1 then
-		awful.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle", false)
-		update_volume()
+		awful.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle", update_volume)
 	elseif button == 4 then
-		awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false)
-		update_volume()
+		awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", update_volume)
 	elseif button == 5 then
-		awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false)
-		update_volume()
+		awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", update_volume)
 	end
 end)
 
-gears.timer({
-	timeout = 1.5,
-	autostart = true,
-	single_shot = false,
-	callback = update_volume,
+-- Listen for audio changes via pactl events instead of polling
+awful.spawn.with_line_callback("pactl subscribe", {
+    stdout = function(line)
+        if line:match("Event 'change' on sink") then
+            update_volume()
+        end
+    end,
 })
 
 awesome.connect_signal("widget::volume", update_volume)
