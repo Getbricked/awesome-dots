@@ -26,7 +26,7 @@ end
 update_ppd()
 
 gears.timer {
-    timeout = 5,
+    timeout = 1.5,
     autostart = true,
     single_shot = false,
     callback = update_ppd,

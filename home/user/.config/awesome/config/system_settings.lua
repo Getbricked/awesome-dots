@@ -1,10 +1,21 @@
-local awful = require("awful")
 local beautiful = require("beautiful")
-local gears = require("gears")
+local awful = require("awful")
 
+-- mouse cursor
+awful.spawn("xrdb -merge ~/.Xresources", false)
+
+screen.connect_signal("property::geometry", function()
+	awful.spawn("xsetroot -cursor_name left_ptr", false)
+end)
+
+awful.spawn("xsetroot -cursor_name left_ptr", false)
+
+-- border
 beautiful.border_width = 2
 beautiful.border_color_normal = "#000000"
 beautiful.border_color_active = "#87CEEB"
+beautiful.useless_gap = 5
+beautiful.gap_single_client = true
 
 local function keep_border_on_maximize(c)
 	local function update_border()
@@ -18,17 +29,3 @@ local function keep_border_on_maximize(c)
 end
 
 client.connect_signal("request::manage", keep_border_on_maximize)
-
-awesome.connect_signal("startup", function()
-	gears.timer({
-		timeout = 1,
-		autostart = true,
-		single_shot = true,
-		callback = function()
-			awful.spawn.with_shell("xset r rate 300 50")
-		end,
-	})
-	awful.spawn("picom --config " .. os.getenv("HOME") .. "/.config/picom/picom.conf", false)
-	awful.spawn("fcitx5 -d --replace", false)
-	awful.spawn(os.getenv("HOME") .. "/.screenlayout/default.sh")
-end)

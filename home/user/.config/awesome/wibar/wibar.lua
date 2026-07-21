@@ -3,10 +3,12 @@ local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
 
-local font = "JetBrainsMono semi-bold 11"
+local theme = require("themes.theme")
 
-local powerdaemon = require("config.powerdaemon")
-local battery = require("config.battery")
+local font = theme.font
+
+local powerdaemon = require("wibar.widget.powerdaemon")
+local battery = require("wibar.widget.battery")
 
 local mytextclock = wibox.widget.textclock()
 

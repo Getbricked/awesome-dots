@@ -4,7 +4,7 @@ local ruled = require("ruled")
 
 ruled.notification.connect_signal('request::rules', function()
     ruled.notification.append_rule {
-        rule       = { },
+        rule       = {},
         properties = {
             screen           = awful.screen.preferred,
             position         = "top_middle",
