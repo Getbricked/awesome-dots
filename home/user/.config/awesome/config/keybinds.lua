@@ -46,7 +46,7 @@ keyboard.append_global_keybindings({
 	end),
 
 	key({ super }, "b", function()
-		spawn("zen-browser")
+		spawn("xdg-open https://about:blank")
 	end),
 
 	key({ super, ctrl }, "q", awesome.quit, { group = "awesome" }),

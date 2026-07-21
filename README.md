@@ -16,7 +16,7 @@ Lockscreen and screenshot by [Nanoka](https://github.com/nhktmdzhg/)
 | `Mod + d` | Application launcher (rofi drun) |
 | `Mod + Alt + v` | Clipboard manager (clipmenu via rofi) |
 | `Mod + e` | File manager (thunar) |
-| `Mod + b` | Browser (zen-browser) |
+| `Mod + b` | Browser (default browser) |
 | `Mod + v` | Volume control (pavucontrol) |
 
 ### Window Management
