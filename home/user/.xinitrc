@@ -25,4 +25,7 @@ fi
 
 xsettingsd &
 
+xset -dpms
+xset s off
+
 exec awesome

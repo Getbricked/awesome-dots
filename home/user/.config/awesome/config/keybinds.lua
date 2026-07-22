@@ -13,6 +13,7 @@ local ctrl = "Control"
 local shift = "Shift"
 
 local lockscreen = require("config.lockscreen")
+local nightmode = os.getenv("HOME") .. "/.config/awesome/config/.nightmode"
 
 awful.mouse.append_global_mousebindings({
 	button({}, 3, function()
@@ -479,6 +480,38 @@ client.connect_signal("request::default_keybindings", function()
 
 		key({ super }, "v", function()
 			spawn("env GTK_THEME=Flat-Remix-GTK-Blue-Dark pavucontrol")
+		end),
+
+		key({ super }, "n", function()
+			local is_on = false
+
+			-- 1. Read the current state directly from the file
+			local f_read = io.open(nightmode, "r")
+			if f_read then
+				local content = f_read:read("*all")
+				is_on = content and content:match("true")
+				f_read:close()
+			end
+
+			-- 2. Open the file to write the new state
+			local f_write = io.open(nightmode, "w")
+
+			-- 3. Toggle screen and write the opposite state
+			if is_on then
+				-- File said "true", so turn it OFF and write "false"
+				awful.spawn("redshift -x", false)
+				if f_write then
+					f_write:write("false")
+					f_write:close()
+				end
+			else
+				-- File said "false", so turn it ON and write "true"
+				awful.spawn("redshift -O 4500", false)
+				if f_write then
+					f_write:write("true")
+					f_write:close()
+				end
+			end
 		end),
 	})
 end)

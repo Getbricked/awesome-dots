@@ -99,6 +99,7 @@ Lockscreen and screenshot by [Nanoka](https://github.com/nhktmdzhg/)
 | `Mod + Ctrl + r` | Restart AwesomeWM |
 | `Mod + Ctrl + q` | Quit AwesomeWM |
 | `Mod + l` | Lock screen |
+| `Mod + n` | Nightmode (redshift -O 4500) |
 
 ### Mouse
 
