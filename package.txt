@@ -19,8 +19,8 @@ xsettingsd
 xclip
 power-profiles-daemon
 kitty
-zsh
 starship
+zsh
 zsh-autosuggestions
 zsh-syntax-highlighting
 lsd
