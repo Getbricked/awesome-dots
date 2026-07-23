@@ -4,65 +4,15 @@ local gears = require("gears")
 local beautiful = require("beautiful")
 
 local theme = require("themes.theme")
-
 local font = theme.font
 
 local powerdaemon = require("wibar.widget.powerdaemon")
 local battery = require("wibar.widget.battery")
+local volume_widget = require("wibar.widget.volume")
+local create_taglist = require("wibar.widget.tag")
 
 local mytextclock = wibox.widget.textclock()
 
-local volume_widget = wibox.widget.textbox()
-volume_widget.font = font
-
-local vol_icons = { "󰕿", "󰖀", "󰕾", "󰝟" }
-
-local function update_volume()
-	awful.spawn.easy_async(
-		"pactl get-sink-volume @DEFAULT_SINK@ && pactl get-sink-mute @DEFAULT_SINK@",
-		function(stdout)
-			local vol = tonumber(stdout:match("Volume:.-(%d+)%%"))
-			local muted = stdout:match("Mute: yes")
-			if not vol then
-				vol = 0
-			end
-			local icon
-			if muted then
-				icon = vol_icons[4]
-			elseif vol >= 66 then
-				icon = vol_icons[3]
-			elseif vol >= 33 then
-				icon = vol_icons[2]
-			else
-				icon = vol_icons[1]
-			end
-			volume_widget:set_markup(icon .. " " .. vol .. "% ")
-		end
-	)
-end
-
-volume_widget:connect_signal("button::press", function(_, _, _, button)
-	if button == 1 then
-		awful.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle", update_volume)
-	elseif button == 4 then
-		awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", update_volume)
-	elseif button == 5 then
-		awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", update_volume)
-	end
-end)
-
--- Listen for audio changes via pactl events instead of polling
-awful.spawn.with_line_callback("pactl subscribe", {
-    stdout = function(line)
-        if line:match("Event 'change' on sink") then
-            update_volume()
-        end
-    end,
-})
-
-awesome.connect_signal("widget::volume", update_volume)
-
-update_volume()
 beautiful.tasklist_font = font
 beautiful.taglist_font = font
 mytextclock.font = font
@@ -70,54 +20,7 @@ powerdaemon.font = font
 battery.font = font
 
 screen.connect_signal("request::desktop_decoration", function(s)
-	awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.suit.tile)
-
-	s.mypromptbox = awful.widget.prompt()
-
-	s.mylayoutbox = awful.widget.layoutbox({
-		screen = s,
-		buttons = {
-			awful.button({}, 1, function()
-				awful.layout.inc(1)
-			end),
-			awful.button({}, 3, function()
-				awful.layout.inc(-1)
-			end),
-			awful.button({}, 4, function()
-				awful.layout.inc(-1)
-			end),
-			awful.button({}, 5, function()
-				awful.layout.inc(1)
-			end),
-		},
-	})
-
-	s.mytaglist = awful.widget.taglist({
-		screen = s,
-		filter = awful.widget.taglist.filter.all,
-		buttons = {
-			awful.button({}, 1, function(t)
-				t:view_only()
-			end),
-			awful.button({ modkey }, 1, function(t)
-				if client.focus then
-					client.focus:move_to_tag(t)
-				end
-			end),
-			awful.button({}, 3, awful.tag.viewtoggle),
-			awful.button({ modkey }, 3, function(t)
-				if client.focus then
-					client.focus:toggle_tag(t)
-				end
-			end),
-			awful.button({}, 4, function(t)
-				awful.tag.viewprev(t.screen)
-			end),
-			awful.button({}, 5, function(t)
-				awful.tag.viewnext(t.screen)
-			end),
-		},
-	})
+	s.mytaglist = create_taglist(s)
 
 	s.mytasklist = awful.widget.tasklist({
 		screen = s,
