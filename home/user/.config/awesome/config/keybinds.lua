@@ -6,6 +6,7 @@ local tag = require("awful.tag")
 local screen = require("awful.screen")
 local spawn = require("awful.spawn")
 local gears = require("gears")
+local settings = require("config.settings")
 
 local super = "Mod4"
 local alt = "Mod1"
@@ -25,10 +26,10 @@ awful.mouse.append_global_mousebindings({
 
 keyboard.append_global_keybindings({
 
-	key({ super, ctrl }, "r", awesome.restart, { group = "awesome" }),
+	key({ super, ctrl }, "r", awesome.restart),
 
 	key({ super }, "Return", function()
-		spawn(terminal)
+		spawn(settings.terminal)
 	end),
 
 	key({ super }, "l", function()
@@ -60,13 +61,13 @@ keyboard.append_global_keybindings({
 		local f_write = io.open(nightmode, "w")
 
 		if is_on then
-			awful.spawn("redshift -x", false)
+			spawn("redshift -x", false)
 			if f_write then
 				f_write:write("false")
 				f_write:close()
 			end
 		else
-			awful.spawn("redshift -O 4500", false)
+			spawn("redshift -O 4500", false)
 			if f_write then
 				f_write:write("true")
 				f_write:close()
@@ -110,10 +111,6 @@ keyboard.append_global_keybindings({
 	key({}, "XF86AudioMicMute", function()
 		spawn("pactl set-source-mute @DEFAULT_SOURCE@ toggle", false)
 		awesome.emit_signal("widget::volume")
-	end),
-
-	key({}, "XF86AudioMicMute", function()
-		spawn("pactl set-source-mute @DEFAULT_SOURCE@ toggle", false)
 	end),
 
 	key({}, "XF86AudioPlay", function()
@@ -172,9 +169,7 @@ keyboard.append_global_keybindings({
 
 		ss:refresh()
 	end),
-})
 
-keyboard.append_global_keybindings({
 	key({ super }, "Escape", tag.history.restore),
 	key({ alt }, "Tab", function()
 		local s = screen.focused()
@@ -198,9 +193,7 @@ keyboard.append_global_keybindings({
 		end
 		active[1]:view_only()
 	end),
-})
 
-keyboard.append_global_keybindings({
 	key({ super }, "Tab", function()
 		awful.client.focus.history.previous()
 		if client.focus then
@@ -235,9 +228,7 @@ keyboard.append_global_keybindings({
 			client.focus:raise()
 		end
 	end),
-})
 
-keyboard.append_global_keybindings({
 	key({ super }, "space", function()
 		local c = client.focus
 		if c and c.valid then
@@ -254,7 +245,7 @@ keyboard.append_global_keybindings({
 	end),
 })
 
-local function swap_by_direction(dir)
+local function move_window_directional(dir, swap)
 	local c = client.focus
 	if not c or not c.valid then
 		return
@@ -274,46 +265,26 @@ local function swap_by_direction(dir)
 	screen.focus_bydirection(dir, scr)
 	local new_scr = screen.focused()
 	if new_scr and new_scr ~= scr then
-		local tag = new_scr.selected_tag
-		local others = tag:clients()
-		if #others > 0 then
-			local other = others[1]
-			local c_screen = c.screen
-			c:move_to_screen(other.screen)
-			other:move_to_screen(c_screen)
-			client.focus = c
-			c:raise()
+		if swap then
+			local tag = new_scr.selected_tag
+			local others = tag:clients()
+			if #others > 0 then
+				local other = others[1]
+				local c_screen = c.screen
+				c:move_to_screen(other.screen)
+				other:move_to_screen(c_screen)
+				client.focus = c
+				c:raise()
+			else
+				c:move_to_tag(tag)
+				client.focus = c
+				c:raise()
+			end
 		else
-			c:move_to_tag(tag)
+			c:move_to_tag(new_scr.selected_tag)
 			client.focus = c
 			c:raise()
 		end
-	end
-end
-
-local function move_window_directional(dir)
-	local c = client.focus
-	if not c or not c.valid then
-		return
-	end
-
-	awful.client.focus.bydirection(dir, c)
-	local target = client.focus
-
-	if target and target ~= c then
-		c:swap(target)
-		client.focus = c
-		c:raise()
-		return
-	end
-
-	local scr = c.screen
-	screen.focus_bydirection(dir, scr)
-	local new_scr = screen.focused()
-	if new_scr and new_scr ~= scr then
-		c:move_to_tag(new_scr.selected_tag)
-		client.focus = c
-		c:raise()
 	end
 end
 
@@ -355,11 +326,11 @@ keyboard.append_global_keybindings({
 	end),
 
 	key({ super, alt }, "Left", function()
-		swap_by_direction("left")
+		move_window_directional("left", true)
 	end),
 
 	key({ super, alt }, "Right", function()
-		swap_by_direction("right")
+		move_window_directional("right", true)
 	end),
 
 	key({ super, ctrl }, "Left", function()
@@ -369,13 +340,10 @@ keyboard.append_global_keybindings({
 	key({ super, ctrl }, "Right", function()
 		move_window_directional("right")
 	end),
-})
 
-keyboard.append_global_keybindings({
 	key({
 		modifiers = { super },
 		keygroup = "numrow",
-		group = "tag",
 		on_press = function(index)
 			local s = screen.focused()
 			local tag = s.tags[index]
@@ -392,19 +360,17 @@ keyboard.append_global_keybindings({
 	key({
 		modifiers = { super, ctrl },
 		keygroup = "numrow",
-		group = "tag",
 		on_press = function(index)
-			local screen = screen.focused()
-			local tag = screen.tags[index]
+			local s = screen.focused()
+			local tag = s.tags[index]
 			if tag then
-				tag.viewtoggle(tag)
+				awful.tag.viewtoggle(tag)
 			end
 		end,
 	}),
 	key({
 		modifiers = { super, shift },
 		keygroup = "numrow",
-		group = "tag",
 		on_press = function(index)
 			if client.focus then
 				local tag = client.focus.screen.tags[index]
@@ -418,7 +384,6 @@ keyboard.append_global_keybindings({
 	key({
 		modifiers = { super, ctrl, shift },
 		keygroup = "numrow",
-		group = "tag",
 		on_press = function(index)
 			if client.focus then
 				local tag = client.focus.screen.tags[index]
@@ -431,7 +396,6 @@ keyboard.append_global_keybindings({
 	key({
 		modifiers = { super },
 		keygroup = "numpad",
-		group = "layout",
 		on_press = function(index)
 			local t = screen.focused().selected_tag
 			if t then

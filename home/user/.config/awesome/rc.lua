@@ -13,6 +13,7 @@ naughty.connect_signal("request::display_error", function(message, startup)
 	})
 end)
 
+require("config.settings")
 require("config.startup")
 require("config.idle_timer")
 require("config.wallpaper")
@@ -24,10 +25,6 @@ beautiful.init("~/.config/awesome/themes/theme.lua")
 require("config.system_settings")
 require("config.layout")
 require("config.notifications")
-
-terminal = "kitty"
-editor = os.getenv("EDITOR") or "nano"
-editor_cmd = terminal .. " -e " .. editor
 
 client.connect_signal("mouse::enter", function(c)
 	c:activate({ context = "mouse_enter", raise = false })
