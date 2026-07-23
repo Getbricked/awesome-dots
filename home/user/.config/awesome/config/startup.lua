@@ -18,13 +18,22 @@ awesome.connect_signal("startup", function()
 
 	spawn(os.getenv("HOME") .. "/.screenlayout/default.sh")
 
+	spawn.with_shell(
+		"if ! pgrep -x 9router > /dev/null; then "
+			.. "expect -c 'set timeout 15; spawn /usr/bin/9router --host 127.0.0.1 --no-browser; "
+			.. 'expect "Choose Interface"; send "\\033\\[B\\033\\[B\\r"; expect eof\' '
+			.. "> /tmp/9router.log 2>&1 & "
+			.. "fi"
+	)
+
 	local f_init = io.open(nightmode, "r")
 	if f_init then
 		local content = f_init:read("*all")
 		f_init:close()
 		if content and content:match("true") then
-			spawn("redshift -x && sleep 1", false)
-			spawn("redshift -O 4500", false)
+			spawn.with_shell("redshift -x && redshift -O 4500")
 		end
 	end
+
+	spawn("discord", false)
 end)
