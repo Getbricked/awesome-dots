@@ -43,6 +43,37 @@ keyboard.append_global_keybindings({
 		spawn.with_shell("CM_LAUNCHER=rofi clipmenu")
 	end),
 
+	key({ super }, "v", function()
+		spawn("env GTK_THEME=Flat-Remix-GTK-Blue-Dark pavucontrol")
+	end),
+
+	key({ super }, "n", function()
+		local is_on = false
+
+		local f_read = io.open(nightmode, "r")
+		if f_read then
+			local content = f_read:read("*all")
+			is_on = content and content:match("true")
+			f_read:close()
+		end
+
+		local f_write = io.open(nightmode, "w")
+
+		if is_on then
+			awful.spawn("redshift -x", false)
+			if f_write then
+				f_write:write("false")
+				f_write:close()
+			end
+		else
+			awful.spawn("redshift -O 4500", false)
+			if f_write then
+				f_write:write("true")
+				f_write:close()
+			end
+		end
+	end),
+
 	key({ super }, "e", function()
 		spawn("thunar")
 	end),
@@ -51,7 +82,7 @@ keyboard.append_global_keybindings({
 		spawn("xdg-open https://about:blank")
 	end),
 
-	key({ super, ctrl }, "q", awesome.quit, { group = "awesome" }),
+	key({ super, ctrl }, "q", awesome.quit),
 
 	key({}, "XF86MonBrightnessUp", function()
 		spawn("brightnessctl s +10%")
@@ -290,7 +321,7 @@ keyboard.append_global_keybindings({
 	key({ super, shift }, "Left", function()
 		local c = client.focus
 		if c and c.valid and c.floating then
-			c:relative_move(20, 0, -40, 0)
+			c:relative_move(30, 0, -60, 0)
 		else
 			tag.incmwfact(-0.05)
 		end
@@ -299,7 +330,7 @@ keyboard.append_global_keybindings({
 	key({ super, shift }, "Right", function()
 		local c = client.focus
 		if c and c.valid and c.floating then
-			c:relative_move(-20, 0, 40, 0)
+			c:relative_move(-30, 0, 60, 0)
 		else
 			tag.incmwfact(0.05)
 		end
@@ -308,7 +339,7 @@ keyboard.append_global_keybindings({
 	key({ super, shift }, "Up", function()
 		local c = client.focus
 		if c and c.valid and c.floating then
-			c:relative_move(0, 20, 0, -40)
+			c:relative_move(0, 30, 0, -60)
 		else
 			tag.incnmaster(1, nil, true)
 		end
@@ -317,7 +348,7 @@ keyboard.append_global_keybindings({
 	key({ super, shift }, "Down", function()
 		local c = client.focus
 		if c and c.valid and c.floating then
-			c:relative_move(0, -20, 0, 40)
+			c:relative_move(0, -30, 0, 60)
 		else
 			tag.incnmaster(-1, nil, true)
 		end
@@ -475,42 +506,6 @@ client.connect_signal("request::default_keybindings", function()
 			local c = client.focus
 			if c and c.valid and c.pid then
 				spawn("kill -9 " .. c.pid)
-			end
-		end),
-
-		key({ super }, "v", function()
-			spawn("env GTK_THEME=Flat-Remix-GTK-Blue-Dark pavucontrol")
-		end),
-
-		key({ super }, "n", function()
-			local is_on = false
-
-			-- 1. Read the current state directly from the file
-			local f_read = io.open(nightmode, "r")
-			if f_read then
-				local content = f_read:read("*all")
-				is_on = content and content:match("true")
-				f_read:close()
-			end
-
-			-- 2. Open the file to write the new state
-			local f_write = io.open(nightmode, "w")
-
-			-- 3. Toggle screen and write the opposite state
-			if is_on then
-				-- File said "true", so turn it OFF and write "false"
-				awful.spawn("redshift -x", false)
-				if f_write then
-					f_write:write("false")
-					f_write:close()
-				end
-			else
-				-- File said "false", so turn it ON and write "true"
-				awful.spawn("redshift -O 4500", false)
-				if f_write then
-					f_write:write("true")
-					f_write:close()
-				end
 			end
 		end),
 	})
