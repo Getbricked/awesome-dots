@@ -47,11 +47,21 @@ local function update_volume()
 				last_muted = muted
 				is_first_run = false
 			elseif vol ~= last_vol or muted ~= last_muted then
-				local notif_text = muted and "Speaker muted" or (vol .. "%")
+				local bar_length = 25
+				local filled = math.floor((vol / 100) * bar_length + 0.5)
+				if filled > bar_length then
+					filled = bar_length
+				end
+				if filled < 0 then
+					filled = 0
+				end
+				local vol_bar = string.rep("█", filled) .. string.rep("░", bar_length - filled)
+
+				local notif_text = muted and "Speaker muted" or (vol_bar .. " " .. vol .. "%")
 				local notif = naughty.notify({
 					title = "Volume",
 					text = icon_plain .. " " .. notif_text,
-					timeout = 0.5,
+					timeout = 1.5,
 					replaces_id = vol_notification_id,
 				})
 				vol_notification_id = notif.id
