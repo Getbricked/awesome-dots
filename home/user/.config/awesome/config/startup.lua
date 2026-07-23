@@ -18,11 +18,16 @@ awesome.connect_signal("startup", function()
 
 	spawn(os.getenv("HOME") .. "/.screenlayout/default.sh")
 
+	spawn("discord", false)
+
+	spawn.with_shell("pgrep -f 9router || /usr/bin/9router --host 127.0.0.1")
+
 	local f_init = io.open(nightmode, "r")
 	if f_init then
 		local content = f_init:read("*all")
 		f_init:close()
 		if content and content:match("true") then
+			spawn("redshift -x && sleep 1", false)
 			spawn("redshift -O 4500", false)
 		end
 	end
