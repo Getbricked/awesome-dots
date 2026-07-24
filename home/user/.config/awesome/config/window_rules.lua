@@ -5,6 +5,8 @@ local window_rule = rules_helper.window_rule
 -- APP DEFINITIONS
 -- ==========================================
 
+-- EXAMPLE: window_rule(app_name, { opacity = { active, inactive }, screen = monitor_num(or monitor_name), tag = tag_num(or tag_name) })
+
 local browsers = {
 	"[Ff]irefox",
 	"org%.mozilla%.firefox",

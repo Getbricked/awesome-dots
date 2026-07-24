@@ -44,7 +44,23 @@ local function window_rule(patterns, options)
 		rule_properties.floating = options.floating
 	end
 
-	-- Save the rule if screen or floating properties exist
+	-- 3. Handle Tag Assignment natively via Property Function
+	if options.tag ~= nil then
+		rule_properties.tag = function(c)
+			local s = c.screen
+			if not s or not s.tags then
+				return nil
+			end
+
+			if type(options.tag) == "number" then
+				return s.tags[options.tag] -- Tag by index
+			else
+				return awful.tag.find_by_name(s, tostring(options.tag)) -- Tag by name
+			end
+		end
+	end
+
+	-- Save the rule if any properties exist
 	if next(rule_properties) ~= nil then
 		table.insert(unified_window_rules, {
 			rule_any = {

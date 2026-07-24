@@ -55,7 +55,7 @@ local function update_volume()
 				if filled < 0 then
 					filled = 0
 				end
-				local vol_bar = string.rep("█", filled) .. string.rep("░", bar_length - filled)
+				local vol_bar = string.rep("█", filled) .. string.rep(" ", bar_length - filled)
 
 				local notif_text = muted and "Speaker muted" or (vol_bar .. " " .. vol .. "%")
 				local notif = naughty.notify({
