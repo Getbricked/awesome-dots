@@ -23,6 +23,7 @@ starship
 zsh
 zsh-autosuggestions
 zsh-syntax-highlighting
+oh-my-zsh-git
 lsd
 neovim
 yazi
