@@ -12,7 +12,6 @@ rnotification.connect_signal("request::rules", function()
 			position = "top_middle",
 			implicit_timeout = 3,
 			border_width = dpi(2),
-			border_color = "#87CEEB",
 		},
 	})
 

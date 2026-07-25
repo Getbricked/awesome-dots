@@ -34,6 +34,7 @@ theme.border_color_marked = "#91231c"
 theme.notification_font = theme.font
 theme.notification_bg = "#00000066"
 theme.notification_fg = focus
+theme.notification_border_color = focus
 theme.notification_shape = gears.shape.rounded_rect
 
 local function draw_circle(size, color)
