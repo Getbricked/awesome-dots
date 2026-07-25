@@ -10,6 +10,7 @@ local powerdaemon = require("wibar.widget.powerdaemon")
 local battery = require("wibar.widget.battery")
 local volume_widget = require("wibar.widget.volume")
 local create_taglist = require("wibar.widget.tag")
+local create_layoutbox = require("wibar.widget.layout")
 
 local mytextclock = wibox.widget.textclock()
 
@@ -21,6 +22,7 @@ battery.font = font
 
 screen.connect_signal("request::desktop_decoration", function(s)
 	s.mytaglist = create_taglist(s)
+	s.mylayoutbox = create_layoutbox(s)
 
 	s.mytasklist = awful.widget.tasklist({
 		screen = s,
@@ -67,6 +69,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
 					volume_widget,
 					wibox.widget.systray(),
 					battery,
+					s.mylayoutbox,
 				},
 			},
 			{

@@ -240,7 +240,7 @@ keyboard.append_global_keybindings({
 		end
 	end),
 
-	key({ super, shift }, "space", function()
+	key({ super, ctrl }, "space", function()
 		awful.layout.inc(1)
 	end),
 })
@@ -291,37 +291,49 @@ end
 keyboard.append_global_keybindings({
 	key({ super, shift }, "Left", function()
 		local c = client.focus
-		if c and c.valid and c.floating then
-			c:relative_move(30, 0, -60, 0)
-		else
-			tag.incmwfact(-0.05)
+		if c and c.valid then
+			local t = awful.screen.focused().selected_tag
+			if c.floating or (t and t.layout == awful.layout.suit.floating) then
+				c:relative_move(30, 0, -60, 0)
+			else
+				tag.incmwfact(-0.05)
+			end
 		end
 	end),
 
 	key({ super, shift }, "Right", function()
 		local c = client.focus
-		if c and c.valid and c.floating then
-			c:relative_move(-30, 0, 60, 0)
-		else
-			tag.incmwfact(0.05)
+		if c and c.valid then
+			local t = awful.screen.focused().selected_tag
+			if c.floating or (t and t.layout == awful.layout.suit.floating) then
+				c:relative_move(-30, 0, 60, 0)
+			else
+				tag.incmwfact(0.05)
+			end
 		end
 	end),
 
 	key({ super, shift }, "Up", function()
 		local c = client.focus
-		if c and c.valid and c.floating then
-			c:relative_move(0, 30, 0, -60)
-		else
-			tag.incnmaster(1, nil, true)
+		if c and c.valid then
+			local t = awful.screen.focused().selected_tag
+			if c.floating or (t and t.layout == awful.layout.suit.floating) then
+				c:relative_move(0, 30, 0, -60)
+			else
+				tag.incnmaster(1, nil, true)
+			end
 		end
 	end),
 
 	key({ super, shift }, "Down", function()
 		local c = client.focus
-		if c and c.valid and c.floating then
-			c:relative_move(0, -30, 0, 60)
-		else
-			tag.incnmaster(-1, nil, true)
+		if c and c.valid then
+			local t = awful.screen.focused().selected_tag
+			if c.floating or (t and t.layout == awful.layout.suit.floating) then
+				c:relative_move(0, -30, 0, 60)
+			else
+				tag.incnmaster(-1, nil, true)
+			end
 		end
 	end),
 
