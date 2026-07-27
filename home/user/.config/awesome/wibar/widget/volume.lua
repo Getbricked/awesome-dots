@@ -7,12 +7,17 @@ local font = theme.font
 local volume_widget = wibox.widget.textbox()
 volume_widget.font = font
 
+local mic_widget = wibox.widget.textbox()
+mic_widget.font = font
+
 local vol_icons = { "󰕿", "󰖀", "󰕾", "󰝟" }
+local mic_icons = { "󰍬", "󰍭" }
 local vol_notification_id = nil
 
 local last_vol = -1
 local last_muted = nil
 local is_first_run = true
+local last_mic_muted = nil
 
 local function update_volume()
 	awful.spawn.easy_async_with_shell(
@@ -73,6 +78,25 @@ local function update_volume()
 	)
 end
 
+local function update_mic()
+	awful.spawn.easy_async_with_shell("pactl get-source-mute @DEFAULT_SOURCE@", function(stdout)
+		local muted = stdout:match("Mute: yes") and true or false
+		if muted then
+			mic_widget:set_markup("<span foreground='red'>" .. mic_icons[2] .. "</span>")
+		else
+			mic_widget:set_markup(mic_icons[1])
+		end
+
+		if last_mic_muted == nil then
+			last_mic_muted = muted
+		end
+	end)
+end
+
+mic_widget:connect_signal("button::press", function()
+	awful.spawn("pactl set-source-mute @DEFAULT_SOURCE@ toggle")
+end)
+
 volume_widget:connect_signal("button::press", function(_, _, _, button)
 	if button == 1 then
 		awful.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle")
@@ -87,6 +111,8 @@ awful.spawn.with_line_callback("pactl subscribe", {
 	stdout = function(line)
 		if line:match("Event 'change' on sink") then
 			update_volume()
+		elseif line:match("Event 'change' on source") then
+			update_mic()
 		end
 	end,
 })
@@ -94,5 +120,13 @@ awful.spawn.with_line_callback("pactl subscribe", {
 awesome.connect_signal("widget::volume", update_volume)
 
 update_volume()
+update_mic()
 
-return volume_widget
+local layout = wibox.widget({
+	mic_widget,
+	volume_widget,
+	spacing = 10,
+	layout = wibox.layout.fixed.horizontal,
+})
+
+return layout

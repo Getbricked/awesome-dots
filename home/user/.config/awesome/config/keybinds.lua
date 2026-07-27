@@ -87,10 +87,17 @@ keyboard.append_global_keybindings({
 
 	key({}, "XF86MonBrightnessUp", function()
 		spawn("brightnessctl s +10%")
+		awesome.emit_signal("widget::brightness")
 	end),
 
 	key({}, "XF86MonBrightnessDown", function()
-		spawn("brightnessctl s 10%-")
+		awful.spawn.easy_async_with_shell("brightnessctl i", function(stdout)
+			local level = tonumber(stdout:match("(%d+)%%"))
+			if not level or level > 10 then
+				spawn("brightnessctl s 10%-")
+			end
+			awesome.emit_signal("widget::brightness")
+		end)
 	end),
 
 	key({}, "XF86AudioRaiseVolume", function()
