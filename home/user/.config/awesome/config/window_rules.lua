@@ -67,7 +67,7 @@ local chat = {
 	"im%.riot%.Riot",
 	"Element",
 }
-window_rule(chat, { opacity = { 0.94 }, screen = "DP-1" })
+window_rule(chat, { opacity = { 0.94 } })
 
 local file_managers = {
 	"[Tt]hunar",

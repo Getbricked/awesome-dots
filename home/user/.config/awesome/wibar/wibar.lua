@@ -9,6 +9,7 @@ local font = theme.font
 local powerdaemon = require("wibar.widget.powerdaemon")
 local battery = require("wibar.widget.battery")
 local volume_widget = require("wibar.widget.volume")
+local network_widget = require("wibar.widget.network")
 local create_taglist = require("wibar.widget.tag")
 local create_layoutbox = require("wibar.widget.layout")
 
@@ -68,6 +69,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
 					layout = wibox.layout.fixed.horizontal,
 					volume_widget,
 					wibox.widget.systray(),
+					network_widget,
 					battery,
 					s.mylayoutbox,
 				},

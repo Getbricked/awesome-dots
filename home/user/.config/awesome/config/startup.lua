@@ -35,5 +35,5 @@ awesome.connect_signal("startup", function()
 		end
 	end
 
-	spawn("discord", false)
+	--spawn("discord", false)
 end)
