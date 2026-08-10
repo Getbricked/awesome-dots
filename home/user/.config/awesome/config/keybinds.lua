@@ -14,6 +14,7 @@ local ctrl = "Control"
 local shift = "Shift"
 
 local lockscreen = require("config.lockscreen")
+local dashboard = require("config.dashboard")
 local nightmode = os.getenv("HOME") .. "/.config/awesome/config/.nightmode"
 
 awful.mouse.append_global_mousebindings({
@@ -77,6 +78,10 @@ keyboard.append_global_keybindings({
 
 	key({ super }, "e", function()
 		spawn("thunar")
+	end),
+
+	key({ super }, "p", function()
+		dashboard.toggle()
 	end),
 
 	key({ super }, "b", function()
@@ -178,6 +183,12 @@ keyboard.append_global_keybindings({
 	end),
 
 	key({ super }, "Escape", tag.history.restore),
+
+	key({}, "Escape", function()
+		if dashboard.is_visible() then
+			dashboard.hide()
+		end
+	end),
 	key({ alt }, "Tab", function()
 		local s = screen.focused()
 		local tags = s.tags

@@ -18,6 +18,7 @@ Lockscreen and screenshot by [Nanoka](https://github.com/nhktmdzhg/)
 | `Mod + e` | File manager (thunar) |
 | `Mod + b` | Browser (default browser) |
 | `Mod + v` | Volume control (pavucontrol) |
+| `Mod + p` | Dashboard |
 
 ### Window Management
 

@@ -14,7 +14,7 @@ local function enable_natural_scrolling()
 	if not id then
 		return
 	end
-	awful.spawn.with_shell("xinput set-prop " .. id .. " 311 1")
+	awful.spawn.with_shell("xinput set-prop " .. id .. " 311 0")
 end
 
 local function reduce_scroll_speed()
