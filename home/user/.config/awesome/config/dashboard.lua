@@ -453,23 +453,30 @@ function dashboard.toggle()
 	end
 end
 
+local esc_key = awful.key({}, "Escape", function()
+	dashboard.hide()
+end)
+local saved_root_keys = nil
+
 function dashboard.show()
 	dashboard.create()
 	if dashboard_wibox then
+		saved_root_keys = root.keys()
+		root.keys(gears.table.join(saved_root_keys, esc_key))
 		dashboard_wibox.visible = true
 		dashboard_visible = true
 	end
 end
 
 function dashboard.hide()
+	if saved_root_keys then
+		root.keys(saved_root_keys)
+		saved_root_keys = nil
+	end
 	if dashboard_wibox then
 		dashboard_wibox.visible = false
 		dashboard_visible = false
 	end
-end
-
-function dashboard.is_visible()
-	return dashboard_visible
 end
 
 return dashboard

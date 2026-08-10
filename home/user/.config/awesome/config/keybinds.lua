@@ -183,12 +183,6 @@ keyboard.append_global_keybindings({
 	end),
 
 	key({ super }, "Escape", tag.history.restore),
-
-	key({}, "Escape", function()
-		if dashboard.is_visible() then
-			dashboard.hide()
-		end
-	end),
 	key({ alt }, "Tab", function()
 		local s = screen.focused()
 		local tags = s.tags
