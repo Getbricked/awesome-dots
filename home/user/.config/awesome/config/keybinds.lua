@@ -306,7 +306,7 @@ keyboard.append_global_keybindings({
 		if c and c.valid then
 			local t = awful.screen.focused().selected_tag
 			if c.floating or (t and t.layout == awful.layout.suit.floating) then
-				c:relative_move(30, 0, -60, 0)
+				c:relative_move(80, 0, -160, 0)
 			else
 				tag.incmwfact(-0.05)
 			end
@@ -318,7 +318,7 @@ keyboard.append_global_keybindings({
 		if c and c.valid then
 			local t = awful.screen.focused().selected_tag
 			if c.floating or (t and t.layout == awful.layout.suit.floating) then
-				c:relative_move(-30, 0, 60, 0)
+				c:relative_move(-80, 0, 160, 0)
 			else
 				tag.incmwfact(0.05)
 			end
@@ -330,7 +330,7 @@ keyboard.append_global_keybindings({
 		if c and c.valid then
 			local t = awful.screen.focused().selected_tag
 			if c.floating or (t and t.layout == awful.layout.suit.floating) then
-				c:relative_move(0, 30, 0, -60)
+				c:relative_move(0, 80, 0, -160)
 			else
 				tag.incnmaster(1, nil, true)
 			end
@@ -342,7 +342,7 @@ keyboard.append_global_keybindings({
 		if c and c.valid then
 			local t = awful.screen.focused().selected_tag
 			if c.floating or (t and t.layout == awful.layout.suit.floating) then
-				c:relative_move(0, -30, 0, 60)
+				c:relative_move(0, -80, 0, 160)
 			else
 				tag.incnmaster(-1, nil, true)
 			end
