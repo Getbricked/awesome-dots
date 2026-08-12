@@ -80,7 +80,7 @@ keyboard.append_global_keybindings({
 		spawn("thunar")
 	end),
 
-	key({ super }, "p", function()
+	key({ super }, "a", function()
 		dashboard.toggle()
 	end),
 
