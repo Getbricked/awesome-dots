@@ -64,7 +64,10 @@ function M.select()
 	awful.spawn.easy_async_with_shell(
 		"find "
 			.. WALL_DIR
-			.. " -maxdepth 1 -type f \\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \\) -printf '%f\\0icon\\037%p\\n' | sort | rofi -dmenu -i -show-icons -theme wallpaper.rasi -p '󰸉 Wallpaper:'",
+			.. " -maxdepth 1 -type f \\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \\) -printf '%f\\0icon\\037%p\\n' | sort | rofi -dmenu -i -show-icons -theme wallpaper.rasi "
+			.. "-kb-move-char-back 'Control+b' -kb-move-char-forward 'Control+f' "
+			.. "-kb-row-left 'Left,Control+Page_Up' -kb-row-right 'Right,Control+Page_Down' "
+			.. "-p '󰸉 Wallpaper:'",
 		function(stdout)
 			local pic = stdout:gsub("%s+$", "")
 			if pic == "" then
