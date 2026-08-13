@@ -19,6 +19,7 @@ Lockscreen + Screenshot + Dashboard by [Nanoka](https://github.com/nhktmdzhg/)
 | `Mod + b` | Browser (default browser) |
 | `Mod + v` | Volume control (pavucontrol) |
 | `Mod + a` | Dashboard |
+| `Mod` + `c` | Calendar |
 
 ### Window Management
 

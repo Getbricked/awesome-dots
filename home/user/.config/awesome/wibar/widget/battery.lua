@@ -61,7 +61,7 @@ end
 update_battery()
 
 gears.timer({
-	timeout = 60,
+	timeout = 5,
 	autostart = true,
 	single_shot = false,
 	callback = update_battery,

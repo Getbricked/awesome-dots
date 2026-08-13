@@ -3,6 +3,7 @@
 local awful = require("awful")
 local gears = require("gears")
 local palette = require("themes.mocha")
+local theme = require("themes.theme")
 local wibox = require("wibox")
 local lockscreen = require("config.lockscreen")
 
@@ -156,12 +157,12 @@ local function create_control(cfg)
 		end,
 		bar_height = 25,
 		bar_color = palette.surface0.hex,
-		bar_active_color = "#87CEEB",
+		bar_active_color = theme.focus,
 		handle_shape = gears.shape.rectangle,
-		handle_color = "#87CEEB",
+		handle_color = theme.focus,
 		handle_width = 15,
 		handle_border_width = 1,
-		handle_border_color = "#87CEEB",
+		handle_border_color = theme.focus,
 		minimum = cfg.minimum,
 		maximum = cfg.maximum,
 	})
@@ -395,7 +396,7 @@ function dashboard.create()
 		visible = false,
 		bg = "#000000cc",
 		border_width = 2,
-		border_color = "#87CEEB",
+		border_color = theme.focus,
 		type = "dock",
 		shape = gears.shape.rounded_rect,
 	})

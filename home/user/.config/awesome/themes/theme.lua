@@ -9,6 +9,7 @@ local theme = {}
 local focus = "#87CEEB"
 local normal = "#000000"
 
+theme.focus = focus
 theme.font = "monospace bold 11"
 
 theme.bg_normal = normal

@@ -15,6 +15,7 @@ local shift = "Shift"
 
 local lockscreen = require("config.lockscreen")
 local dashboard = require("config.dashboard")
+local calendar = require("wibar.widget.calendar")
 local nightmode = os.getenv("HOME") .. "/.config/awesome/config/.nightmode"
 
 awful.mouse.append_global_mousebindings({
@@ -82,6 +83,10 @@ keyboard.append_global_keybindings({
 
 	key({ super }, "a", function()
 		dashboard.toggle()
+	end),
+
+	key({ super }, "c", function()
+		calendar.toggle()
 	end),
 
 	key({ super }, "b", function()

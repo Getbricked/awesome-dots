@@ -12,8 +12,14 @@ local volume_widget = require("wibar.widget.volume")
 local network_widget = require("wibar.widget.network")
 local create_taglist = require("wibar.widget.tag")
 local create_layoutbox = require("wibar.widget.layout")
+local calendar = require("wibar.widget.calendar")
 
 local mytextclock = wibox.widget.textclock()
+mytextclock:connect_signal("button::press", function(_, _, _, button)
+	if button == 1 then
+		calendar.toggle()
+	end
+end)
 
 beautiful.tasklist_font = font
 beautiful.taglist_font = font
