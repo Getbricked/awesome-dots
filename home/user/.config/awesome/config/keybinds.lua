@@ -15,7 +15,7 @@ local shift = "Shift"
 
 local lockscreen = require("config.lockscreen")
 local dashboard = require("config.dashboard")
-local wallpaper = require("config.wallpaper_helper")
+local wallpaper = require("config.wallpaper")
 local calendar = require("wibar.widget.calendar")
 local nightmode = os.getenv("HOME") .. "/.config/awesome/config/.nightmode"
 

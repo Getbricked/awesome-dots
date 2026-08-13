@@ -6,7 +6,7 @@ package.cpath = package.cpath .. ";/usr/lib/lua-pam/?.so"
 local naughty = require("naughty")
 local pam = require("liblua_pam")
 local wibox = require("wibox")
-local wallpaper_for = require("config.wallpaper")
+local wallpaper = require("config.wallpaper")
 
 local lockscreen = {
 	visible = false,
@@ -48,9 +48,9 @@ local function create_lockscreen_ui(s)
 
 	-- Wallpaper widget
 	local wallpaper_widget = nil
-	if gears.filesystem.file_readable(wallpaper_for(s)) then
+	if gears.filesystem.file_readable(wallpaper.wallpaper_for(s)) then
 		wallpaper_widget = wibox.widget({
-			image = wallpaper_for(s),
+			image = wallpaper.wallpaper_for(s),
 			resize = true,
 			widget = wibox.widget.imagebox,
 		})
