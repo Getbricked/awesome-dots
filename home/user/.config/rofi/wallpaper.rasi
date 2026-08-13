@@ -1,0 +1,108 @@
+/* Wallpaper picker grid theme */
+* {
+    accent:             #ffffff;
+    font:               "monospace bold 11";
+    bg-base:            rgba(18, 18, 22, 0.92);
+    bg-surface:         rgba(255, 255, 255, 0.05);
+    bg-divider:         rgba(255, 255, 255, 0.1);
+
+    fg-main:            #e0e0e0;
+    fg-muted:           rgba(224, 224, 224, 0.5);
+
+    background-color:   rgba(0, 0, 0, 0.1);
+    text-color:         @fg-main;
+
+    margin:             0;
+    padding:            0;
+    spacing:            0;
+}
+
+window {
+    width:              1280px;
+    height:             620px;
+    background-color:   @bg-base;
+    border:             2px solid;
+    border-color:       #87CEEB;
+    border-radius:      10px;
+}
+
+mainbox {
+    children:           [ inputbar, listview ];
+}
+
+inputbar {
+    padding:            16px;
+    spacing:            12px;
+    border:             0px 0px 1px 0px;
+    border-color:       @bg-divider;
+    children:           [ prompt, entry ];
+}
+
+prompt {
+    text-color:         @accent;
+    font-size:          14px;
+    font-weight:        bold;
+    vertical-align:     0.5;
+}
+
+entry {
+    text-color:         rgb(135, 206, 235);
+    placeholder:        "Search wallpapers...";
+    placeholder-color:  @fg-muted;
+    vertical-align:     0.5;
+}
+
+listview {
+    columns:            5;
+    flow:               horizontal;
+    lines:              2;
+    padding:            16px;
+    spacing:            12px;
+    scrollbar:          false;
+    cycle:              true;
+    dynamic:            true;
+}
+
+element {
+    padding:            6px;
+    border-radius:      8px;
+    orientation:        vertical;
+    spacing:            5px;
+}
+
+element-icon {
+    size:               215px;
+    border-radius:      6px;
+    background-color:   @bg-surface;
+}
+
+element-text {
+    text-color:         @fg-main;
+    vertical-align:     0.5;
+    font-size:          12px;
+}
+
+element normal.normal {
+    background-color:   transparent;
+}
+
+element alternate.normal {
+    background-color:   transparent;
+}
+
+element selected {
+    background-color:   rgba(135, 206, 235, 0.25);
+    border:             2px solid;
+    border-color:       #87CEEB;
+    border-radius:      8px;
+}
+
+element-text selected {
+    text-color:         #87CEEB;
+    font-weight:        bold;
+}
+
+element-icon selected {
+    border:             2px solid;
+    border-color:       @accent;
+}

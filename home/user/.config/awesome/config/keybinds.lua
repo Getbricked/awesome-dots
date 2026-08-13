@@ -15,6 +15,7 @@ local shift = "Shift"
 
 local lockscreen = require("config.lockscreen")
 local dashboard = require("config.dashboard")
+local wallpaper = require("config.wallpaper_helper")
 local calendar = require("wibar.widget.calendar")
 local nightmode = os.getenv("HOME") .. "/.config/awesome/config/.nightmode"
 
@@ -87,6 +88,10 @@ keyboard.append_global_keybindings({
 
 	key({ super }, "c", function()
 		calendar.toggle()
+	end),
+
+	key({ super }, "w", function()
+		wallpaper.select()
 	end),
 
 	key({ super }, "b", function()

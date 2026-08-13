@@ -20,6 +20,7 @@ Lockscreen + Screenshot + Dashboard by [Nanoka](https://github.com/nhktmdzhg/)
 | `Mod + v` | Volume control (pavucontrol) |
 | `Mod + a` | Dashboard |
 | `Mod` + `c` | Calendar |
+| `Mod` + `w` | Wallpaper menu |
 
 ### Window Management
 
