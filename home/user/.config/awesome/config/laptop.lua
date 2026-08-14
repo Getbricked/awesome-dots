@@ -2,27 +2,17 @@ local awful = require("awful")
 local naughty = require("naughty")
 
 -- Touchpad
-local function find_touchpad_id()
+local function setup_touchpad()
 	local handle = io.popen("xinput list --id-only 'pointer:SYNA329D:00 06CB:CE14 Touchpad' 2>/dev/null")
-	local result = handle:read("*a")
-	handle:close()
-	return tonumber(result)
-end
-
-local function enable_natural_scrolling()
-	local id = find_touchpad_id()
+	local result = handle and handle:read("*a")
+	if handle then
+		handle:close()
+	end
+	local id = tonumber(result)
 	if not id then
 		return
 	end
-	awful.spawn.with_shell("xinput set-prop " .. id .. " 311 0")
-end
-
-local function reduce_scroll_speed()
-	local id = find_touchpad_id()
-	if not id then
-		return
-	end
-	awful.spawn.with_shell("xinput set-prop " .. id .. " 342 30")
+	awful.spawn.with_shell("xinput set-prop " .. id .. " 311 0; xinput set-prop " .. id .. " 342 30")
 end
 
 -- Brightness notification
@@ -56,8 +46,7 @@ local function update_brightness()
 end
 
 awesome.connect_signal("startup", function()
-	enable_natural_scrolling()
-	reduce_scroll_speed()
+	setup_touchpad()
 end)
 
 awesome.connect_signal("widget::brightness", update_brightness)

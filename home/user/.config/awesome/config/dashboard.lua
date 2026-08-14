@@ -6,13 +6,14 @@ local palette = require("themes.mocha")
 local theme = require("themes.theme")
 local wibox = require("wibox")
 local lockscreen = require("config.lockscreen")
+local popup = require("config.popup")
 
 local dashboard = {}
 
 local dashboard_wibox = nil
 local dashboard_visible = false
 
-local avatar_path = "/home/aki/Pictures/getbrick.png"
+local avatar_path = os.getenv("HOME") .. "/Pictures/getbrick.png"
 
 local function create_avatar_widget()
 	return wibox.widget({
@@ -288,12 +289,13 @@ local function create_brightness_control()
 		maximum = 95,
 		icon = "󰃚",
 		get = function(cb)
-			awful.spawn.easy_async({ "brightnessctl", "g" }, function(stdout)
-				local cur = tonumber(stdout:match("(%d+)"))
-				awful.spawn.easy_async({ "brightnessctl", "m" }, function(maxout)
-					local max = tonumber(maxout:match("(%d+)")) or 65535
-					cb({ value = cur and math.floor((cur / max) * 100) or nil })
-				end)
+			awful.spawn.easy_async({ "brightnessctl", "i" }, function(stdout)
+				local cur = tonumber(stdout:match("Current brightness: (%d+)"))
+					or tonumber(stdout:match("brightness: (%d+)"))
+				local max = tonumber(stdout:match("Max brightness: (%d+)"))
+					or tonumber(stdout:match("max_brightness: (%d+)"))
+					or 65535
+				cb({ value = cur and max > 0 and math.floor((cur / max) * 100) or nil })
 			end)
 		end,
 		apply = function(v)
@@ -454,30 +456,20 @@ function dashboard.toggle()
 	end
 end
 
-local esc_key = awful.key({}, "Escape", function()
-	dashboard.hide()
-end)
-local saved_root_keys = nil
-
 function dashboard.show()
 	dashboard.create()
 	if dashboard_wibox then
-		saved_root_keys = root.keys()
-		root.keys(gears.table.join(saved_root_keys, esc_key))
-		dashboard_wibox.visible = true
+		popup.show(dashboard_wibox, dashboard.hide)
 		dashboard_visible = true
 	end
 end
 
 function dashboard.hide()
-	if saved_root_keys then
-		root.keys(saved_root_keys)
-		saved_root_keys = nil
-	end
 	if dashboard_wibox then
 		dashboard_wibox.visible = false
 		dashboard_visible = false
 	end
+	popup.hide()
 end
 
 return dashboard

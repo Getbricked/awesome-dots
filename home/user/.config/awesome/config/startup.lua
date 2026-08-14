@@ -1,6 +1,6 @@
 local spawn = require("awful.spawn")
 local gears = require("gears")
-local nightmode = os.getenv("HOME") .. "/.config/awesome/config/.nightmode"
+local nightmode = require("config.nightmode")
 
 awesome.connect_signal("startup", function()
 	gears.timer({
@@ -12,7 +12,7 @@ awesome.connect_signal("startup", function()
 		end,
 	})
 
-	spawn("picom --config " .. os.getenv("HOME") .. "/.config/picom/picom.conf", false)
+	spawn.once("picom --config " .. os.getenv("HOME") .. "/.config/picom/picom.conf")
 
 	spawn("fcitx5 -d --replace", false)
 
@@ -32,13 +32,8 @@ awesome.connect_signal("startup", function()
 			.. "fi"
 	)
 
-	local f_init = io.open(nightmode, "r")
-	if f_init then
-		local content = f_init:read("*all")
-		f_init:close()
-		if content and content:match("true") then
-			spawn.with_shell("redshift -x && redshift -O 4500")
-		end
+	if nightmode.is_on() then
+		spawn.with_shell("redshift -x && redshift -O 4500")
 	end
 
 	--spawn("discord", false)

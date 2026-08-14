@@ -17,7 +17,7 @@ local lockscreen = require("config.lockscreen")
 local dashboard = require("config.dashboard")
 local wallpaper = require("config.wallpaper")
 local calendar = require("wibar.widget.calendar")
-local nightmode = os.getenv("HOME") .. "/.config/awesome/config/.nightmode"
+local nightmode = require("config.nightmode")
 
 awful.mouse.append_global_mousebindings({
 	button({}, 3, function()
@@ -52,29 +52,12 @@ keyboard.append_global_keybindings({
 	end),
 
 	key({ super }, "n", function()
-		local is_on = false
-
-		local f_read = io.open(nightmode, "r")
-		if f_read then
-			local content = f_read:read("*all")
-			is_on = content and content:match("true")
-			f_read:close()
-		end
-
-		local f_write = io.open(nightmode, "w")
-
-		if is_on then
+		if nightmode.is_on() then
 			spawn("redshift -x", false)
-			if f_write then
-				f_write:write("false")
-				f_write:close()
-			end
+			nightmode.set(false)
 		else
 			spawn("redshift -O 4500", false)
-			if f_write then
-				f_write:write("true")
-				f_write:close()
-			end
+			nightmode.set(true)
 		end
 	end),
 
@@ -101,15 +84,20 @@ keyboard.append_global_keybindings({
 	key({ super, ctrl }, "q", awesome.quit),
 
 	key({}, "XF86MonBrightnessUp", function()
-		spawn("brightnessctl s +10%")
-		awesome.emit_signal("widget::brightness")
+		awful.spawn.easy_async_with_shell("brightnessctl i", function(stdout)
+			local level = tonumber(stdout:match("(%d+)%%"))
+			if level then
+				spawn("brightnessctl s " .. math.min(level + 10, 100) .. "%")
+			end
+			awesome.emit_signal("widget::brightness")
+		end)
 	end),
 
 	key({}, "XF86MonBrightnessDown", function()
 		awful.spawn.easy_async_with_shell("brightnessctl i", function(stdout)
 			local level = tonumber(stdout:match("(%d+)%%"))
-			if not level or level > 10 then
-				spawn("brightnessctl s 10%-")
+			if level and level > 10 then
+				spawn("brightnessctl s " .. (level - 10) .. "%")
 			end
 			awesome.emit_signal("widget::brightness")
 		end)

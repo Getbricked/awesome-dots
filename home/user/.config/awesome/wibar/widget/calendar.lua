@@ -4,6 +4,7 @@ local gears = require("gears")
 local palette = require("themes.mocha")
 local theme = require("themes.theme")
 local wibox = require("wibox")
+local popup = require("config.popup")
 
 local calendar = {}
 
@@ -328,11 +329,6 @@ function calendar.rebuild()
 	end
 end
 
-local esc_key = awful.key({}, "Escape", function()
-	calendar.hide()
-end)
-local saved_root_keys = nil
-
 function calendar.create()
 	if cal_wibox then
 		return
@@ -384,8 +380,7 @@ end
 function calendar.show()
 	calendar.create()
 	if cal_wibox then
-		saved_root_keys = root.keys()
-		root.keys(gears.table.join(saved_root_keys, esc_key))
+		popup.show(cal_wibox, calendar.hide)
 		calendar.rebuild()
 		cal_wibox.visible = true
 		visible = true
@@ -396,10 +391,7 @@ function calendar.hide()
 	stop_edit_grabber()
 	edit_day = nil
 	edit_display.text = ""
-	if saved_root_keys then
-		root.keys(saved_root_keys)
-		saved_root_keys = nil
-	end
+	popup.hide()
 	if cal_wibox then
 		cal_wibox.visible = false
 		visible = false
