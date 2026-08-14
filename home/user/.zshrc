@@ -36,3 +36,14 @@ alias l='ls -l'
 alias la='ls -a'
 alias lla='ls -la'
 alias lt='ls --tree'
+
+# tokless
+export PATH="/home/aki/.local/bin:$PATH"
+
+# >>> tokless path >>>
+# Adds tokless tool bin dirs to PATH (rtk, bun, cargo).
+for d in "/.local/bin" "/.bun/bin" "/.cargo/bin"; do
+  [ -d "" ] && case "::" in *"::"*) ;; *) PATH=":" ;; esac
+done
+export PATH
+# <<< tokless path <<<

@@ -18,20 +18,6 @@ awesome.connect_signal("startup", function()
 
 	spawn(os.getenv("HOME") .. "/.screenlayout/default.sh")
 
-	spawn.with_shell(
-		"if ! pgrep -x 9router > /dev/null; then "
-			.. "expect -c 'set timeout 15; spawn /usr/bin/9router --host 127.0.0.1 --no-browser; "
-			.. 'expect "☆ Exit"; '
-			.. 'set items [regexp -all {[☆★]} $expect_out(buffer)]; '
-			.. 'if {$items >= 3} { for {set i 0} {$i < [expr {$items - 2}]} {incr i} { '
-			.. 'send "\\033\\[B" '
-			.. '} }; '
-			.. 'send "\\r"; '
-			.. 'expect eof\' '
-			.. "> /tmp/9router.log 2>&1 & "
-			.. "fi"
-	)
-
 	if nightmode.is_on() then
 		spawn.with_shell("redshift -x && redshift -O 4500")
 	end
