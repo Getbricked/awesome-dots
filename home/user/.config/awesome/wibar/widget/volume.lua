@@ -13,6 +13,7 @@ mic_widget.font = font
 local vol_icons = { "󰕿", "󰖀", "󰕾", "󰝟" }
 local mic_icons = { "󰍬", "󰍭" }
 local vol_notification_id = nil
+local mic_notification_id = nil
 
 local last_vol = -1
 local last_muted = nil
@@ -89,6 +90,15 @@ local function update_mic()
 
 		if last_mic_muted == nil then
 			last_mic_muted = muted
+		elseif muted ~= last_mic_muted then
+			last_mic_muted = muted
+			local notif = naughty.notify({
+				title = muted and "Mic muted" or "Mic unmuted",
+				text = muted and "󰍭 Microphone is muted" or "󰍬 Microphone is on",
+				timeout = 1.5,
+				replaces_id = mic_notification_id,
+			})
+			mic_notification_id = notif.id
 		end
 	end)
 end

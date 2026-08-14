@@ -18,6 +18,7 @@ local dashboard = require("config.dashboard")
 local wallpaper = require("config.wallpaper")
 local calendar = require("wibar.widget.calendar")
 local nightmode = require("config.nightmode")
+local notifications = require("config.notifications")
 
 awful.mouse.append_global_mousebindings({
 	button({}, 3, function()
@@ -84,13 +85,8 @@ keyboard.append_global_keybindings({
 	key({ super, ctrl }, "q", awesome.quit),
 
 	key({}, "XF86MonBrightnessUp", function()
-		awful.spawn.easy_async_with_shell("brightnessctl i", function(stdout)
-			local level = tonumber(stdout:match("(%d+)%%"))
-			if level then
-				spawn("brightnessctl s " .. math.min(level + 10, 100) .. "%")
-			end
-			awesome.emit_signal("widget::brightness")
-		end)
+		spawn("brightnessctl s +10%")
+		awesome.emit_signal("widget::brightness")
 	end),
 
 	key({}, "XF86MonBrightnessDown", function()
@@ -124,19 +120,19 @@ keyboard.append_global_keybindings({
 	end),
 
 	key({}, "XF86AudioPlay", function()
-		spawn("playerctl play-pause", false)
+		notifications.media("play-pause")
 	end),
 
 	key({}, "XF86AudioPrev", function()
-		spawn("playerctl previous", false)
+		notifications.media("previous")
 	end),
 
 	key({}, "XF86AudioNext", function()
-		spawn("playerctl next", false)
+		notifications.media("next")
 	end),
 
 	key({}, "XF86AudioStop", function()
-		spawn("playerctl stop", false)
+		notifications.media("stop")
 	end),
 
 	key({}, "XF86TouchpadToggle", function()
