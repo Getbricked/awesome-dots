@@ -55,8 +55,8 @@ screen.connect_signal("request::desktop_decoration", function(s)
 		screen = s,
 		bg = "transparent",
 		margins = {
-			left = 10,
-			right = 10,
+			left = 18,
+			right = 18,
 		},
 		shape = function(cr, width, height)
 			gears.shape.rounded_rect(cr, width, height, 8)
