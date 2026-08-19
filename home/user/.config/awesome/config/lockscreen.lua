@@ -287,7 +287,7 @@ function lockscreen.show()
 			else
 				lockscreen.password = ""
 				update_indicator()
-				update_status("Failure! You are not btw.", true)
+				update_status("Wrong password!", true)
 			end
 		end)
 		if not ok then
