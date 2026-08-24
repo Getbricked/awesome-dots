@@ -15,6 +15,7 @@ local shift = "Shift"
 
 local lockscreen = require("config.lockscreen")
 local dashboard = require("config.dashboard")
+local keybinds_help = require("config.keybinds_help")
 local wallpaper = require("config.wallpaper")
 local calendar = require("wibar.widget.calendar")
 local nightmode = require("config.nightmode")
@@ -68,6 +69,10 @@ keyboard.append_global_keybindings({
 
 	key({ super }, "a", function()
 		dashboard.toggle()
+	end),
+
+	key({ super }, "h", function()
+		keybinds_help.toggle()
 	end),
 
 	key({ super }, "c", function()

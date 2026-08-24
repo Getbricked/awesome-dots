@@ -103,6 +103,7 @@ Lockscreen + Screenshot + Dashboard by [Nanoka](https://github.com/nhktmdzhg/)
 | `Mod + Ctrl + q` | Quit AwesomeWM |
 | `Mod + l` | Lock screen |
 | `Mod + n` | Nightmode (redshift -O 4500) |
+| `Mod + h` | Keybinds help |
 
 ### Mouse
 
