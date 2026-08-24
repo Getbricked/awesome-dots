@@ -60,20 +60,11 @@ end
 
 -- Media key notification (play-pause/previous/next/stop)
 local media_gen = 0
+local media_player = nil
 
 function M.media(action)
 	media_gen = media_gen + 1
 	local gen = media_gen
-
-	local function metadata(cb)
-		awful.spawn.easy_async(
-			{ "playerctl", "metadata", "--format", "{{ status }}\t{{ artist }}\t{{ title }}" },
-			function(stdout)
-				local status, artist, title = stdout:match("^([^\t]*)\t([^\t]*)\t([^\t]*)$")
-				cb(clean(status), clean(artist), clean(title))
-			end
-		)
-	end
 
 	local function show(title, artist)
 		if title == "" then
@@ -83,13 +74,23 @@ function M.media(action)
 		M.notify("media", "Now Playing", text)
 	end
 
-	-- Poll metadata until `check` passes (then call `done`), no more than 30 tries.
+	local function metadata_of(player, cb)
+		awful.spawn.easy_async(
+			{ "playerctl", "--player", player, "metadata", "--format", "{{ status }}\t{{ artist }}\t{{ title }}" },
+			function(stdout)
+				local status, artist, title = stdout:match("^([^\t]*)\t([^\t]*)\t([^\t]*)$")
+				cb(clean(status), clean(artist), clean(title))
+			end
+		)
+	end
+
+	-- Poll one player's metadata until `check` passes (max 30 tries).
 	-- A newer key press supersedes this one, so stale chains abort early.
-	local function poll_until(done, check, tries)
+	local function poll_until(player, done, check, tries)
 		if gen ~= media_gen then
 			return
 		end
-		metadata(function(status, artist, title)
+		metadata_of(player, function(status, artist, title)
 			if gen ~= media_gen then
 				return
 			end
@@ -97,52 +98,80 @@ function M.media(action)
 				done(status, artist, title)
 			elseif tries < 30 then
 				gears.timer.start_new(0.1, function()
-					poll_until(done, check, tries + 1)
+					poll_until(player, done, check, tries + 1)
 					return false
 				end)
 			end
 		end)
 	end
 
-	if action == "stop" then
-		awful.spawn({ "playerctl", "stop" })
-		return
-	end
-
-	if action == "play-pause" then
-		metadata(function(status)
-			-- was paused -> toggle resumes; was playing -> toggle pauses (no notif)
-			local was_paused = status == "Paused"
-			awful.spawn.easy_async({ "playerctl", "play-pause" }, function()
-				if gen ~= media_gen then
-					return
-				end
-				if was_paused then
-					poll_until(function(_, artist, title)
-						show(title, artist)
-					end, function(_, _, title)
-						return title ~= ""
-					end, 0)
-				end
-			end)
-		end)
-		return
-	end
-
-	-- next/previous: the player switches tracks asynchronously, so poll until the
-	-- title actually changes before notifying.
-	metadata(function(_, _, old_title)
-		awful.spawn.easy_async({ "playerctl", action }, function()
+	-- List every player once and pick the relevant one. Preference order:
+	-- the player we last controlled while it is Playing, then any Playing
+	-- player, then the last-controlled one (paused), then the first listed.
+	awful.spawn.easy_async(
+		{ "playerctl", "-a", "metadata", "--format", "{{ playerName }}\t{{ status }}\t{{ artist }}\t{{ title }}" },
+		function(stdout)
 			if gen ~= media_gen then
 				return
 			end
-			poll_until(function(_, artist, title)
+			local entries = {}
+			for line in stdout:gmatch("[^\r\n]+") do
+				local name, status, artist, title =
+					line:match("^([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)$")
+				name, status, artist, title = clean(name), clean(status), clean(artist), clean(title)
+				if name ~= "" and title ~= "" then
+					entries[#entries + 1] = { name = name, status = status, artist = artist, title = title }
+				end
+			end
+			local function find(pred)
+				for _, e in ipairs(entries) do
+					if pred(e) then
+						return e
+					end
+				end
+			end
+			local target = find(function(e)
+				return e.status == "Playing" and e.name == media_player
+			end) or find(function(e)
+				return e.status == "Playing"
+			end) or find(function(e)
+				return e.name == media_player
+			end) or entries[1]
+			if not target then
+				return
+			end
+			media_player = target.name
+
+			if action == "stop" then
+				awful.spawn({ "playerctl", "--player", target.name, "stop" })
+				return
+			end
+
+			if action == "play-pause" then
+				-- was playing -> toggles to paused (no notif); was paused -> resumes
+				awful.spawn({ "playerctl", "--player", target.name, "play-pause" })
+				if target.status == "Playing" then
+					return
+				end
+				poll_until(target.name, function(_, artist, title)
+					show(title, artist)
+				end, function(_, _, title)
+					return title ~= ""
+				end, 0)
+				return
+			end
+
+			-- next/previous: the player switches tracks asynchronously, so poll
+			-- until ITS title actually changes before notifying.
+			local old_title = target.title
+			awful.spawn({ "playerctl", "--player", target.name, action })
+			poll_until(target.name, function(_, artist, title)
 				show(title, artist)
 			end, function(_, _, title)
 				return title ~= "" and title ~= old_title
 			end, 0)
-		end)
-	end)
+		end
+	)
 end
 
 return M
