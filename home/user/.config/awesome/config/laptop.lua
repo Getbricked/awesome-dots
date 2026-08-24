@@ -1,5 +1,7 @@
 local awful = require("awful")
 local naughty = require("naughty")
+local gears = require("gears")
+local lockscreen = require("config.lockscreen")
 
 -- Touchpad
 local function setup_touchpad()
@@ -44,6 +46,28 @@ local function update_brightness()
 		brightness_notification_id = notif.id
 	end)
 end
+
+-- Lid close: lock, then suspend (logind HandleLidSwitch must be `ignore`)
+local lid_open = true
+
+gears.timer({
+	timeout = 0.5,
+	autostart = true,
+	call_now = false,
+	callback = function()
+		awful.spawn.easy_async({ "cat", "/proc/acpi/button/lid/LID0/state" }, function(stdout)
+			local closed = stdout:match("closed") ~= nil
+			if closed and lid_open then
+				lockscreen.show()
+				gears.timer.start_new(0.4, function()
+					awful.spawn("systemctl suspend", false)
+					return false
+				end)
+			end
+			lid_open = not closed
+		end)
+	end,
+})
 
 awesome.connect_signal("startup", function()
 	setup_touchpad()
