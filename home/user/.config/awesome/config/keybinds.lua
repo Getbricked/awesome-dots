@@ -157,7 +157,7 @@ keyboard.append_global_keybindings({
 	end),
 
 	key({ super, shift }, "s", function()
-		spawn.with_shell("systemctl --user stop clipmenud.service")
+		spawn.with_shell("clipctl disable")
 		local ss = awful.screenshot({
 			interactive = true,
 			directory = "/tmp",
@@ -169,13 +169,13 @@ keyboard.append_global_keybindings({
 			)
 
 			gears.timer.start_new(1, function()
-				spawn.with_shell("systemctl --user start clipmenud.service")
+				spawn.with_shell("clipctl enable")
 				return false
 			end)
 		end)
 
 		ss:connect_signal("snipping::cancelled", function()
-			spawn.with_shell("systemctl --user start clipmenud.service")
+			spawn.with_shell("clipctl enable")
 		end)
 
 		ss:refresh()
