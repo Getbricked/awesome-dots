@@ -30,7 +30,7 @@ rnotification.connect_signal("request::rules", function()
 		properties = {
 			screen = awful.screen.preferred,
 			position = "top_middle",
-			implicit_timeout = 3,
+			implicit_timeout = 7,
 			border_width = dpi(2),
 		},
 	})
@@ -116,8 +116,7 @@ function M.media(action)
 			end
 			local entries = {}
 			for line in stdout:gmatch("[^\r\n]+") do
-				local name, status, artist, title =
-					line:match("^([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)$")
+				local name, status, artist, title = line:match("^([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)$")
 				name, status, artist, title = clean(name), clean(status), clean(artist), clean(title)
 				if name ~= "" and title ~= "" then
 					entries[#entries + 1] = { name = name, status = status, artist = artist, title = title }

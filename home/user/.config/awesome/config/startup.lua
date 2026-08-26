@@ -22,6 +22,8 @@ awesome.connect_signal("startup", function()
 		spawn.with_shell("redshift -x && redshift -O 4500")
 	end
 
+	spawn.with_shell("kdeconnect-indicator &")
+
 	spawn.with_shell(
 		"if ! pgrep -x 9router > /dev/null; then "
 			.. "expect -c 'set timeout 15; spawn /usr/bin/9router --host 127.0.0.1 --no-browser; "

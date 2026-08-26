@@ -15,6 +15,39 @@ local lockscreen = {
 	keygrabber = nil,
 }
 
+local media_actions = {
+	["XF86AudioPlay"] = function()
+		awful.spawn({ "playerctl", "play-pause" })
+	end,
+	["XF86AudioPrev"] = function()
+		awful.spawn({ "playerctl", "previous" })
+	end,
+	["XF86AudioNext"] = function()
+		awful.spawn({ "playerctl", "next" })
+	end,
+	["XF86AudioStop"] = function()
+		awful.spawn({ "playerctl", "stop" })
+	end,
+	["XF86AudioRaiseVolume"] = function()
+		awful.spawn({ "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%" })
+	end,
+	["XF86AudioLowerVolume"] = function()
+		awful.spawn({ "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%" })
+	end,
+	["XF86AudioMute"] = function()
+		awful.spawn({ "pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle" })
+	end,
+	["XF86AudioMicMute"] = function()
+		awful.spawn({ "pactl", "set-source-mute", "@DEFAULT_SOURCE@", "toggle" })
+	end,
+	["XF86MonBrightnessUp"] = function()
+		awful.spawn({ "brightnessctl", "s", "+10%" })
+	end,
+	["XF86MonBrightnessDown"] = function()
+		awful.spawn({ "brightnessctl", "s", "10%-" })
+	end,
+}
+
 local mocha_colors = {
 	mocha.rosewater.hex,
 	mocha.flamingo.hex,
@@ -331,7 +364,9 @@ function lockscreen.show()
 			if lockscreen.monitor_off_timer then
 				lockscreen.monitor_off_timer:stop()
 			end
-			if key == "BackSpace" then
+			if media_actions[key] then
+				media_actions[key]()
+			elseif key == "BackSpace" then
 				if #lockscreen.password > 0 then
 					lockscreen.password = lockscreen.password:sub(1, -2)
 					update_indicator()
