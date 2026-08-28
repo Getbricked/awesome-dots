@@ -43,6 +43,16 @@ end)
 
 naughty.connect_signal("request::display", function(n)
 	naughty.layout.box({ notification = n })
+	-- Keep the notification alive while the mouse hovers it.
+	local w = n.widget
+	if w then
+		w:connect_signal("mouse::enter", function()
+			n:suspend()
+		end)
+		w:connect_signal("mouse::leave", function()
+			n:resume()
+		end)
+	end
 end)
 
 -- Layout switching notification
