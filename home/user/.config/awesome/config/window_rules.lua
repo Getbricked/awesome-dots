@@ -68,6 +68,8 @@ local chat = {
 	"Element",
 }
 window_rule(chat, { opacity = { 0.94 } })
+window_rule({ "[Dd]iscord" }, { tag = 2 })
+window_rule({ "[Zz]alo" }, { tag = 4 })
 
 local file_managers = {
 	"[Tt]hunar",
@@ -111,7 +113,7 @@ window_rule({ "[Aa]udacious" }, { opacity = { 0.95 }, floating = true })
 window_rule({ "[Nn]otion" }, { opacity = { 0.95 } })
 window_rule(
 	{ "com%.github%.th_ch%.youtube_music", "com%.github%.th%-ch%.youtube%-music" },
-	{ opacity = { 0.85 }, screen = "HDMI-0" }
+	{ opacity = { 0.85 }, screen = "HDMI-0", tag = 3 }
 )
 
 -- Default AwesomeWM floating elements

@@ -39,4 +39,5 @@ awesome.connect_signal("startup", function()
 	)
 
 	--spawn("discord", false)
+	spawn("/home/aki/zalo-for-linux/dist/Zalo-26.8.10+ZaDark-26.2.1-66ebe8a.AppImage", false)
 end)
