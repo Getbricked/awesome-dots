@@ -61,7 +61,7 @@ tag.connect_signal("property::layout", function(t)
 		return
 	end
 	local name = awful.layout.getname(t.layout) or "unknown"
-	M.notify("layout", "Layout", name:gsub("^%l", string.upper))
+	M.notify("layout", "Layout", (name:gsub("^%l", string.upper)))
 end)
 
 local function clean(s)
