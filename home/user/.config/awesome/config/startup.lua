@@ -37,7 +37,4 @@ awesome.connect_signal("startup", function()
 			.. "> /tmp/9router.log 2>&1 & "
 			.. "fi"
 	)
-
-	--spawn("discord", false)
-	spawn("/home/aki/zalo-for-linux/dist/Zalo-26.8.10+ZaDark-26.2.1-66ebe8a.AppImage", false)
 end)

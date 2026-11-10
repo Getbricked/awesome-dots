@@ -112,8 +112,8 @@ window_rule({ "kitty" }, { opacity = { 0.9 } })
 window_rule({ "[Aa]udacious" }, { opacity = { 0.95 }, floating = true })
 window_rule({ "[Nn]otion" }, { opacity = { 0.95 } })
 window_rule(
-	{ "com%.github%.th_ch%.youtube_music", "com%.github%.th%-ch%.youtube%-music" },
-	{ opacity = { 0.85 }, screen = "HDMI-0", tag = 3 }
+	{ "com%.github%.th_ch%.youtube_music", "com%.github%.th%-ch%.youtube%-music", "meiro" },
+	{ opacity = { 0.8 }, screen = "HDMI-0", tag = 3 }
 )
 
 -- Default AwesomeWM floating elements

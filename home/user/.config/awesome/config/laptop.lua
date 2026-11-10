@@ -14,7 +14,10 @@ local function setup_touchpad()
 	if not id then
 		return
 	end
-	awful.spawn.with_shell("xinput set-prop " .. id .. " 311 1; xinput set-prop " .. id .. " 342 30")
+	awful.spawn.with_shell(
+		"xinput set-prop " .. id .. ' "libinput Natural Scrolling Enabled" 1; '
+			.. "xinput set-prop " .. id .. ' "libinput Scrolling Pixel Distance" 30'
+	)
 end
 
 -- Brightness notification
