@@ -87,3 +87,18 @@ screen.connect_signal("request::desktop_decoration", function(s)
 		},
 	})
 end)
+
+client.connect_signal("property::fullscreen", function(c)
+	local s = c.screen
+	if not (s and s.mywibox) then
+		return
+	end
+	local fullscreen = false
+	for _, cl in ipairs(s.clients) do
+		if cl.fullscreen then
+			fullscreen = true
+			break
+		end
+	end
+	s.mywibox.visible = not fullscreen
+end)

@@ -167,8 +167,8 @@ client.connect_signal("property::fullscreen", function(c)
 	end
 	if c.fullscreen then
 		c.opacity = 1
-	else
-		apply_opacity(c, c.class or c.instance)
+	elseif not apply_opacity(c, c.class) and c.instance ~= c.class then
+		apply_opacity(c, c.instance)
 	end
 end)
 
