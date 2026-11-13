@@ -5,6 +5,7 @@ local gears = require("gears")
 local palette = require("themes.mocha")
 local theme = require("themes.theme")
 local wibox = require("wibox")
+local naughty = require("naughty")
 local lockscreen = require("config.lockscreen")
 local popup = require("config.popup")
 
@@ -99,6 +100,49 @@ local function create_current_playing()
 	})
 
 	return scroll_container
+end
+
+local function create_dnd_button()
+	local button = wibox.widget({
+		{
+			{
+				text = "󰖔",
+				font = "JetBrainsMono Nerd Font Mono 50",
+				halign = "center",
+				valign = "center",
+				widget = wibox.widget.textbox,
+			},
+			widget = wibox.container.margin,
+			margins = 15,
+		},
+		id = "button_bg",
+		bg = naughty.suspended and theme.focus or palette.surface0.hex,
+		shape = gears.shape.circle,
+		widget = wibox.container.background,
+		forced_width = 90,
+		forced_height = 90,
+	})
+
+	local function refresh()
+		button:get_children_by_id("button_bg")[1].bg = naughty.suspended and theme.focus or palette.surface0.hex
+	end
+
+	button:connect_signal("mouse::enter", function()
+		if not naughty.suspended then
+			button:get_children_by_id("button_bg")[1].bg = palette.surface1.hex
+		end
+	end)
+
+	button:connect_signal("mouse::leave", refresh)
+
+	button:connect_signal("button::press", function(_, _, _, btn)
+		if btn == 1 then
+			naughty.suspended = not naughty.suspended
+			refresh()
+		end
+	end)
+
+	return button
 end
 
 local function create_media_button(icon, command)
@@ -361,10 +405,11 @@ local function create_power_grid()
 	local grid_content = wibox.widget({
 		layout = wibox.layout.grid,
 		spacing = 10,
-		forced_num_cols = 4,
+		forced_num_cols = 5,
 	})
 
 	local btn_lists = {
+		create_dnd_button(),
 		create_round_button("", function()
 			lockscreen.show()
 		end),
