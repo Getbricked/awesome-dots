@@ -88,8 +88,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
 	})
 end)
 
-client.connect_signal("property::fullscreen", function(c)
-	local s = c.screen
+local function update_wibar_visibility(s)
 	if not (s and s.mywibox) then
 		return
 	end
@@ -101,4 +100,14 @@ client.connect_signal("property::fullscreen", function(c)
 		end
 	end
 	s.mywibox.visible = not fullscreen
+end
+
+client.connect_signal("property::fullscreen", function(c)
+	update_wibar_visibility(c.screen)
+end)
+
+client.connect_signal("unmanage", function()
+	for s in screen do
+		update_wibar_visibility(s)
+	end
 end)

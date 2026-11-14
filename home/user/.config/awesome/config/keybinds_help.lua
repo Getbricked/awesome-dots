@@ -23,8 +23,7 @@ local sections_left = {
 		{ "Mod + Alt + v", "Clipboard menu (clipmenu)" },
 	} },
 	{ "Windows", {
-		{ "Mod + f", "Toggle maximized" },
-		{ "Mod + Shift + f", "Toggle fullscreen" },
+		{ "Mod + f", "Toggle fullscreen" },
 		{ "Mod + q", "Close window gracefully" },
 		{ "Mod + Shift + q", "Force kill window (SIGKILL)" },
 		{ "Mod + space", "Toggle floating / centered" },
@@ -83,6 +82,7 @@ local sections_right = {
 		{ "Mod + a", "Dashboard" },
 		{ "Mod + c", "Calendar" },
 		{ "Mod + w", "Wallpaper picker" },
+		{ "Mod + Shift + b", "Toggle top bar (wibar)" },
 		{ "Mod + h", "This help" },
 	} },
 }

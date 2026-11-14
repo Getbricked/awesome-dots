@@ -87,6 +87,14 @@ keyboard.append_global_keybindings({
 		spawn("xdg-open https://about:blank")
 	end),
 
+	key({ super, shift }, "b", function()
+		for s in _G.screen do
+			if s.mywibox then
+				s.mywibox.visible = not s.mywibox.visible
+			end
+		end
+	end),
+
 	key({ super, ctrl }, "q", awesome.quit),
 
 	key({}, "XF86MonBrightnessUp", function()
@@ -476,11 +484,6 @@ end, "mouse.move")
 client.connect_signal("request::default_keybindings", function()
 	keyboard.append_client_keybindings({
 		key({ super }, "f", function(c)
-			c.maximized = not c.maximized
-			c:raise()
-		end),
-
-		key({ super, shift }, "f", function(c)
 			c.fullscreen = not c.fullscreen
 			c:raise()
 		end),

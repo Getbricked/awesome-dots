@@ -26,8 +26,7 @@ Lockscreen + Screenshot + Dashboard by [Nanoka](https://github.com/nhktmdzhg/)
 
 | Key | Action |
 |---|---|
-| `Mod + f` | Toggle maximized |
-| `Mod + Shift + f` | Toggle fullscreen |
+| `Mod + f` | Toggle fullscreen |
 | `Mod + q` | Close window gracefully |
 | `Mod + Shift + q` | Force kill window (SIGKILL) |
 | `Mod + space` | Toggle floating / centered |
@@ -103,6 +102,7 @@ Lockscreen + Screenshot + Dashboard by [Nanoka](https://github.com/nhktmdzhg/)
 | `Mod + Ctrl + q` | Quit AwesomeWM |
 | `Mod + l` | Lock screen |
 | `Mod + n` | Nightmode (redshift -O 4500) |
+| `Mod + Shift + b` | Toggle top bar (wibar) |
 | `Mod + h` | Keybinds help |
 
 ### Mouse
