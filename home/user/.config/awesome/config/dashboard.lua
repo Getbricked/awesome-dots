@@ -57,24 +57,25 @@ local function create_info_rows()
 end
 
 local function create_current_playing()
-	local current_widget = wibox.widget({
-		{
-			font = "Maple Mono NF CN 12",
-			widget = wibox.widget.textbox,
-			halign = "center",
-			valign = "center",
-		},
-		fg = palette.text.hex,
-		widget = wibox.container.background,
+	local textbox = wibox.widget({
+		font = "Maple Mono NF CN 12",
+		widget = wibox.widget.textbox,
+		halign = "center",
+		valign = "center",
 	})
+
+	local current_widget = wibox.container.background(textbox, nil)
+	current_widget.fg = palette.text.hex
 
 	local scroll_container = wibox.container.scroll.horizontal(
 		current_widget,
-		1,
+		20,
+		40,
+		0,
+		false,
 		400,
 		wibox.container.scroll.step_functions.linear_back_and_forth
 	)
-	scroll_container.timeout = 0.05
 
 	gears.timer({
 		timeout = 1,
@@ -82,16 +83,33 @@ local function create_current_playing()
 		call_now = true,
 		callback = function()
 			awful.spawn.easy_async(
-				{ "playerctl", "metadata", "--format", "{{ title }} - {{ artist }}" },
+				{
+					"playerctl", "-a", "metadata", "--format",
+					"{{playerName}}" .. "\t" .. "{{status}}" .. "\t" .. "{{artist}}" .. "\t" .. "{{title}}",
+				},
 				function(stdout)
-					local current_song = stdout:gsub("%s+$", "")
-					if current_song == "" then
-						current_song = "No song playing"
-					else
-						current_song = "Now Playing: " .. current_song
+					local playing, paused
+					for line in stdout:gmatch("[^\r\n]+") do
+						local _, status, artist, title = line:match("^([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)$")
+						if title and title ~= "" then
+							local entry = { artist = artist, title = title }
+							if status == "Playing" and not playing then
+								playing = entry
+							elseif status == "Paused" and not paused then
+								paused = entry
+							end
+						end
 					end
-					if current_widget.widget.text ~= current_song then
-						current_widget.widget.text = current_song
+					local current = playing or paused
+					local current_song
+					if current then
+						current_song = current.artist ~= "" and (current.title .. " - " .. current.artist) or current.title
+						current_song = "Now Playing: " .. current_song
+					else
+						current_song = "No song playing"
+					end
+					if textbox.text ~= current_song then
+						textbox.text = current_song
 						scroll_container:emit_signal("widget::redraw_needed")
 					end
 				end
