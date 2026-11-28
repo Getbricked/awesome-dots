@@ -6,6 +6,7 @@ local window_rule = rules_helper.window_rule
 -- ==========================================
 
 -- EXAMPLE: window_rule(app_name, { opacity = { active, inactive }, screen = monitor_num(or monitor_name), tag = tag_num(or tag_name) })
+-- New rule:  keep_mapped = true allows to stream cross tag
 
 local browsers = {
 	"[Ff]irefox",
@@ -68,8 +69,7 @@ local chat = {
 	"Element",
 }
 window_rule(chat, { opacity = { 0.94 } })
-window_rule({ "[Dd]iscord" }, { tag = 2 })
-window_rule({ "[Dd]iscord" }, { keep_mapped = true })
+window_rule({ "[Dd]iscord" }, { tag = 2})
 window_rule({ "[Zz]alo" }, { tag = 4 })
 
 local file_managers = {
