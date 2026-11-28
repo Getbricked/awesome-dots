@@ -29,4 +29,8 @@ xset -dpms
 xset s off
 xset s noblank
 
+if [ -x "$HOME/.local/awesome/bin/awesome" ]; then
+  exec "$HOME/.local/awesome/bin/awesome"
+fi
+
 exec awesome

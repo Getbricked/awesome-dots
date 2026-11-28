@@ -97,6 +97,19 @@ keyboard.append_global_keybindings({
 
 	key({ super, ctrl }, "q", awesome.quit),
 
+	key({ super, ctrl }, "s", function()
+		local t = awful.screen.focused().selected_tag
+		if not t then return end
+		local on
+		for _, c in ipairs(t:clients()) do
+			if on == nil then on = not c.keep_mapped end
+			c.keep_mapped = on
+		end
+		if on ~= nil then
+			notifications.notify("keep_mapped", "Stream-park", on and "Enabled" or "Disabled")
+		end
+	end),
+
 	key({}, "XF86MonBrightnessUp", function()
 		spawn("brightnessctl s +10%")
 		awesome.emit_signal("widget::brightness")

@@ -69,6 +69,7 @@ local chat = {
 }
 window_rule(chat, { opacity = { 0.94 } })
 window_rule({ "[Dd]iscord" }, { tag = 2 })
+window_rule({ "[Dd]iscord" }, { keep_mapped = true })
 window_rule({ "[Zz]alo" }, { tag = 4 })
 
 local file_managers = {

@@ -60,6 +60,14 @@ local function window_rule(patterns, options)
 		end
 	end
 
+	-- 4. Keep mapped on ban (class-only, never match title/instance/role)
+	if options.keep_mapped ~= nil then
+		table.insert(unified_window_rules, {
+			rule_any = { class = patterns },
+			properties = { keep_mapped = options.keep_mapped },
+		})
+	end
+
 	-- Save the rule if any properties exist
 	if next(rule_properties) ~= nil then
 		table.insert(unified_window_rules, {
@@ -195,6 +203,13 @@ ruled.client.connect_signal("request::rules", function()
 			rule_any = custom_rule.rule_any,
 			properties = custom_rule.properties,
 		})
+	end
+end)
+
+-- Center every floating client on its screen
+client.connect_signal("manage", function(c)
+	if c.floating then
+		awful.placement.centered(c, { honor_workarea = true })
 	end
 end)
 

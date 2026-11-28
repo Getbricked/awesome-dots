@@ -28,6 +28,7 @@ local sections_left = {
 		{ "Mod + Shift + q", "Force kill window (SIGKILL)" },
 		{ "Mod + space", "Toggle floating / centered" },
 		{ "Mod + Shift + space", "Cycle tiling layouts" },
+		{ "Mod + Ctrl + s", "Stream-park current tag" },
 	} },
 	{ "Focus & Navigation", {
 		{ "Mod + Tab", "Focus previous window" },
