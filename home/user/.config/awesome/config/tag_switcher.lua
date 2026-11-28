@@ -13,7 +13,7 @@ local alt = "Mod1"
 local shift = "Shift"
 
 local GAP, PAD = 10, 12
-local LABEL_H = 18
+local LABEL_H = 24
 
 local TMP = (os.getenv("XDG_RUNTIME_DIR") or "/tmp") .. "/awesome-tagsw"
 os.execute("mkdir -p " .. TMP)
@@ -251,7 +251,7 @@ grabber = awful.keygrabber({
 					create_preview(t, s, cell_w, preview_h),
 					{
 						text = t.name,
-						font = "Maple Mono NF CN 10",
+						font = "Maple Mono NF CN bold 14",
 						align = "center",
 						valign = "center",
 						widget = wibox.widget.textbox,
@@ -267,6 +267,22 @@ grabber = awful.keygrabber({
 				forced_height = cell_h,
 			})
 			labels[i] = cell
+
+			local function point()
+				if sel ~= i then
+					sel = i
+					render()
+				end
+			end
+			cell:connect_signal("mouse::enter", point)
+			cell:connect_signal("mouse::move", point)
+
+			cell:connect_signal("button::press", function(_, _, _, button)
+				if button == 1 then
+					sel = i
+					grabber:stop()
+				end
+			end)
 			grid:add(cell)
 		end
 		box:setup({ grid, margins = PAD, widget = wibox.container.margin })
