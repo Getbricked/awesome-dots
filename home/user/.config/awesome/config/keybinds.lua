@@ -20,6 +20,7 @@ local wallpaper = require("config.wallpaper")
 local calendar = require("wibar.widget.calendar")
 local nightmode = require("config.nightmode")
 local notifications = require("config.notifications")
+require("config.tag_switcher")
 
 awful.mouse.append_global_mousebindings({
 	button({}, 3, function()
@@ -203,28 +204,6 @@ keyboard.append_global_keybindings({
 	end),
 
 	key({ super }, "Escape", tag.history.restore),
-	key({ alt }, "Tab", function()
-		local s = screen.focused()
-		local tags = s.tags
-		local active = {}
-		for _, t in ipairs(tags) do
-			if #t:clients() > 0 then
-				table.insert(active, t)
-			end
-		end
-		if #active == 0 then
-			return
-		end
-		local cur = s.selected_tag
-		for i, t in ipairs(active) do
-			if t == cur then
-				local next = active[i % #active + 1]
-				next:view_only()
-				return
-			end
-		end
-		active[1]:view_only()
-	end),
 
 	key({ super }, "Tab", function()
 		awful.client.focus.history.previous()

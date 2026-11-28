@@ -34,7 +34,7 @@ local sections_left = {
 		{ "Mod + Tab", "Focus previous window" },
 		{ "Mod + Arrows", "Focus window in direction" },
 		{ "Mod + Escape", "Jump to previous tag" },
-		{ "Alt + Tab", "Cycle tags with windows" },
+		{ "Alt + Tab", "Tag switcher popup (occupied tags, hold Alt)" },
 	} },
 	{ "Tags (Workspaces)", {
 		{ "Mod + 1-9", "Switch to tag N" },
